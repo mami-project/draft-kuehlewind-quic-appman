@@ -66,13 +66,13 @@ Table of Contents
      2.1.  The Necessity of TCP Fallback . . . . . . . . . . . . . .   3
      2.2.  Zero RTT: Here There Be Dragons . . . . . . . . . . . . .   4
      2.3.  Stream versus Flow Multiplexing . . . . . . . . . . . . .   4
-   3.  Manageability of QUIC . . . . . . . . . . . . . . . . . . . .   5
-     3.1.  Version xxx: QUIC Public Header Structure . . . . . . . .   5
+   3.  Manageability of QUIC . . . . . . . . . . . . . . . . . . . .   4
+     3.1.  QUIC Public Header Structure  . . . . . . . . . . . . . .   5
      3.2.  Integrity Protection of the Wire Image  . . . . . . . . .   6
      3.3.  Connection ID and Rebinding . . . . . . . . . . . . . . .   6
      3.4.  Packet Numbers  . . . . . . . . . . . . . . . . . . . . .   6
      3.5.  Stateful Treatment of QUIC Traffic  . . . . . . . . . . .   6
-     3.6.  Measuring QUIC Traffic  . . . . . . . . . . . . . . . . .   7
+     3.6.  Measuring QUIC Traffic  . . . . . . . . . . . . . . . . .   6
    4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
    5.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
    6.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   7
@@ -87,15 +87,14 @@ Table of Contents
    under development in the IETF quic working group, focusing on support
    of semantics as needed for HTTP/2 [I-D.ietf-quic-http] such as
    stream-multiplexing to avoid head-of-line blocking.  Based on current
-   deployment practices, QUIC is encapsulated in UDP and by default
-   encrypted.  This means the version of QUIC that is currently under
-   development will integrate TLS 1.3 [I-D.ietf-quic-tls] to encrypt all
-   payload data including all header information needed for for stream-
-   multiplexing and most on the other header information.  Given QUIC is
-   an end-to-end transport protocol all information in the protocol
-   header is not meant to be mutable by the network and therefore will
-   at least be integrity-protected as good as possible (if not
-   encrypted).
+   deployment practices, QUIC is encapsulated in UDP and encrypted by
+   default.  This means the version of QUIC that is currently under
+   development will integrate TLS 1.3 {{I-D.ietf-quic- tls}} to encrypt
+   all payload data including all header information needed for for
+   stream-multiplexing and most on the other header information.  Given
+   QUIC is an end-to-end transport protocol, all information in the
+   protocol header is not meant to be mutable by the network, and will
+   therefore be integrity- protected to the extent possible.
 
    This document serves two purposes:
 
@@ -105,6 +104,7 @@ Table of Contents
        as well as the use of other application layer protocols over
        QUIC.  For specific guidance on how to integrate HTTP/2 with
        quick see [I-D.ietf-quic-http].
+
 
 
 
@@ -119,11 +119,6 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
        information that is exposed by QUIC to the network as well as
        explaining requirement and assumption that the QUIC protocol
        design takes toward the expected network treatment.
-
-   [EDITOR'S NOTE: This document contains notes toward a -00 revision of
-   the QUIC applicability and manageability statement.  Write some
-   frontmatter, then remove this note when we have written a real
-   draft.]
 
 1.1.  Notational Conventions
 
@@ -162,6 +157,11 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
 
    We hope that the deployment of a proposed standard version of the
    QUIC protocol will provide an incentive for these networks to permit
+   QUIC traffic.  Indeed, the ability to treat QUIC traffic statefully
+   as in Section 3.5 removes one network management incentive to block
+   this traffic.
+
+
 
 
 
@@ -169,10 +169,6 @@ Kuehlewind & Trammell     Expires July 15, 2017                 [Page 3]
 
 Internet-DrafApplicability and Management of the QUIC Trans January 2017
 
-
-   QUIC traffic.  Indeed, the ability to treat QUIC traffic statefully
-   as in Section 3.5 removes one network management incentive to block
-   this traffic.
 
 2.2.  Zero RTT: Here There Be Dragons
 
@@ -194,7 +190,7 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
    QUIC's stream multiplexing feature allows applications to run
    multiple streams over a single connection, without head-of-line
    blocking between streams, associated at a point in time with a single
-   five- tuple.  Streams are meaningful only to the application; since
+   five-tuple.  Streams are meaningful only to the application; since
    stream information is carried inside QUIC's encryption boundary, no
    information about the stream(s) whose frames are carried by a given
    packet is visible to the network.
@@ -202,29 +198,17 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
    Stream multiplexing is not intended to be used for differentiating
    streams in terms of network treatment.  Application traffic requiring
    different network treatment should therefore be carried over
-   different five-tuples (i.e. multiple QUIC connections).  Given QUIC's
-   ability to send application data on the first packet of a connection
-   (if a previous connection to the same host has been successfully
-   established to provide the respective credentials), the cost for
-   establishing another connection are extremely low.
+   different five-tuples (i.e.  multiple QUIC connections).  Given
+   QUIC's ability to send application data on the first packet of a
+   connection (if a previous connection to the same host has been
+   successfully established to provide the respective credentials), the
+   cost for establishing another connection are extremely low.
 
    [EDITOR'S NOTE: For discussion: If establishing a new connection does
-   seems to be sufficient, the protocol's rebinding functionality (see
+   seem to be sufficient, the protocol's rebinding functionality (see
    section 3.7 of [I-D.ietf-quic-transport]) could be extended to allow
    multiple five-tuples to share a connection ID simultaneously, instead
    of sequentially.]
-
-
-
-
-
-
-
-
-Kuehlewind & Trammell     Expires July 15, 2017                 [Page 4]
-
-Internet-DrafApplicability and Management of the QUIC Trans January 2017
-
 
 3.  Manageability of QUIC
 
@@ -235,6 +219,13 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
    available in the packet header in each QUIC packet, and the dynamics
    of that information.
 
+
+
+Kuehlewind & Trammell     Expires July 15, 2017                 [Page 4]
+
+Internet-DrafApplicability and Management of the QUIC Trans January 2017
+
+
    QUIC is a versioned protocol.  Everything about the header format can
    change except the mechanism by which a receiver can determine whether
    and where a version number is present, and the meaning of the version
@@ -244,7 +235,7 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
    structure of the version of the QUIC transport document that is
    current as of this writing.
 
-3.1.  Version xxx: QUIC Public Header Structure
+3.1.  QUIC Public Header Structure
 
    In the current version of the QUIC protocol, the following
    information are optionally exposed in the QUIC header:
@@ -273,6 +264,15 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
 
    o  packet number: The packet number is variable length as indicated
       by packet number size field.  If the length is indicated as zero
+      the packet number is not present.  If the public reset flag is
+      set, the packet number cannot be present.
+
+   o  diversification nonce [EDITOR'S NOTE: talk about this once it's
+      clear what it will be...]
+
+
+
+
 
 
 
@@ -282,25 +282,19 @@ Kuehlewind & Trammell     Expires July 15, 2017                 [Page 5]
 Internet-DrafApplicability and Management of the QUIC Trans January 2017
 
 
-      the packet number is not present.  If the public reset flag is
-      set, the packet number cannot be present.
-
-   o  diversification nonce (????)
-
 3.2.  Integrity Protection of the Wire Image
 
    All information in the QUIC header, even if exposed to the network,
-   are integrity protected, therefore a device on the network path MUST
+   is integrity protected, therefore a device on the network path MUST
    not change these information.  Altering of header information would
    fail any integrity check, leading to packet drop at the receiver.
 
 3.3.  Connection ID and Rebinding
 
    A flow might change one of its IP addresses but keep the same
-   connection ID (discussed above...)
-
-   [EDITOR'S NOTE: What does that mean for the network, if anything
-   (given the connection ID is only rarely present)?]
+   connection ID, as discussed in Section 3.1.  [EDITOR'S NOTE: What
+   does that mean for the network, if anything (given the connection ID
+   is only rarely present)?]
 
 3.4.  Packet Numbers
 
@@ -313,22 +307,28 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
    While loss detection in QUIC is still based on packet numbers,
    congestion control by default provides richer information that plain
    TCP does.  Especially, QUIC does not rely on duplicated ACKs, making
-   it more resistant to re-ordering.
+   it more tolerant of packet re-ordering.
 
 3.5.  Stateful Treatment of QUIC Traffic
 
    Stateful network devices such as firewalls use exposed header
-   information to support state setup and tear-down.  See
-   [I-D.trammell-plus-statefulness] for a general model of in-network
-   state management.  In-line with [I-D.trammell-plus-statefulness], a
-   connection ID echo can be used as an association/confirmation signal
-   and QUIC's public reset as partial one-way stop.
+   information to support state setup and tear-down.  In-line with
+   [I-D.trammell-plus-statefulness] (which provides a general model for
+   in- network state management), the presence of a Connection ID on
+   QUIC traffic can be used as an association/confirmation signal;
+   QUIC's public reset may be used as a partial one-way stop signal.
 
    [EDITOR'S NOTE: note public reset changes for state management may be
    desirable: two-way stop as in [I-D.trammell-plus-statefulness] has
    nice properties.]
 
+3.6.  Measuring QUIC Traffic
 
+   Given packet numbers can be expected to be exposed on most packets
+   (expect public reset but that terminates the connection anyway),
+   packet numbers can be used by the network to measure loss that
+   occurred between the sender and the measurement point in the network.
+   Similarly, out-of-order packets indicate upstream reordering.  Unlike
 
 
 
@@ -338,14 +338,7 @@ Kuehlewind & Trammell     Expires July 15, 2017                 [Page 6]
 Internet-DrafApplicability and Management of the QUIC Trans January 2017
 
 
-3.6.  Measuring QUIC Traffic
-
-   Given packet numbers can be expected to be exposed on most packets
-   (expect public reset but that terminates the connection anyway),
-   packet numbers can be used by the network to measure loss that
-   occurred between the sender and the measurement point in the network.
-   Further out-of-order packets similarly indicate upstream reordering.
-   Unlike with TCP, there is no way to measure downstream loss and RTT
+   with TCP, there is no way to measure downstream loss and RTT
    passively.
 
    [EDITOR'S NOTE: the addition of a simple packet number echo would
@@ -354,8 +347,8 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
    echo-side (i.e. one-in-N packets or 1/p packets can carry an echo)
    for efficiency tradeoff, if necessary.]
 
-   [EDITOR'S NOTE: look at the connection IDs for partial tracking of
-   mobility events.]
+   [EDITOR'S NOTE: in-network devices can inspect and correlate
+   connection IDs for partial tracking of mobility events.]
 
 4.  IANA Considerations
 
@@ -363,9 +356,9 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
 
 5.  Security Considerations
 
-   Some security considerations can be found on the body of this
-   document.  However, further consideration might be needed while this
-   document evolves.
+   Especially security- and privacy-relevant applicability and
+   manageability considerations are given in Section 2.2, Section 3.2,
+   and Section 3.3.
 
 6.  Acknowledgments
 
@@ -384,6 +377,13 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
               and Secure Transport", draft-ietf-quic-transport-00 (work
               in progress), November 2016.
 
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <http://www.rfc-editor.org/info/rfc2119>.
+
+
+
 
 
 
@@ -393,11 +393,6 @@ Kuehlewind & Trammell     Expires July 15, 2017                 [Page 7]
 
 Internet-DrafApplicability and Management of the QUIC Trans January 2017
 
-
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <http://www.rfc-editor.org/info/rfc2119>.
 
 7.2.  Informative References
 
@@ -439,6 +434,11 @@ Authors' Addresses
    Switzerland
 
    Email: mirja.kuehlewind@tik.ee.ethz.ch
+
+
+
+
+
 
 
 
