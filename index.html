@@ -303,7 +303,7 @@ address {
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Kuehlewind, M. and B. Trammell" />
-  <meta name="dct.identifier" content="urn:ietf:id:draft-kuehlewind-quic-appman-latest" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-kuehlewind-quic-appman-00" />
   <meta name="dct.issued" scheme="ISO8601" content="2017-1-11" />
   <meta name="dct.abstract" content="This document discusses the applicability and manageability of the QUIC transport protocol, focusing on caveats impacting application protocol development and deployment over QUIC, and network operations involving QUIC traffic." />
   <meta name="description" content="This document discusses the applicability and manageability of the QUIC transport protocol, focusing on caveats impacting application protocol development and deployment over QUIC, and network operations involving QUIC traffic." />
@@ -337,7 +337,7 @@ address {
   </table>
 
   <p class="title">Applicability and Management of the QUIC Transport Protocol<br />
-  <span class="filename">draft-kuehlewind-quic-appman-latest</span></p>
+  <span class="filename">draft-kuehlewind-quic-appman-00</span></p>
   
   <h1 id="rfc.abstract">
   <a href="#rfc.abstract">Abstract</a>
@@ -386,12 +386,12 @@ address {
   </ul>
 
   <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a></h1>
-<p id="rfc.section.1.p.1">QUIC <a href="#I-D.ietf-quic-transport">[I-D.ietf-quic-transport]</a> is a new transport protocol currently under development in the IETF quic working group, focusing on support of semantics as needed for HTTP/2 <a href="#I-D.ietf-quic-http">[I-D.ietf-quic-http]</a> such as stream-multiplexing to avoid head-of-line blocking. Based on current deployment practices, QUIC is encapsulated in UDP and encrypted by default. This means the version of QUIC that is currently under development will integrate TLS 1.3  {{I-D.ietf-quic- tls}} to encrypt all payload data including all header information needed for for stream-multiplexing and most on the  other header information. Given QUIC is an end-to-end transport protocol, all information in the protocol header is not meant to be mutable by the network, and will therefore be integrity- protected to the extent possible.</p>
+<p id="rfc.section.1.p.1">QUIC <a href="#I-D.ietf-quic-transport">[I-D.ietf-quic-transport]</a> is a new transport protocol currently under development in the IETF quic working group, focusing on support of semantics as needed for HTTP/2 <a href="#I-D.ietf-quic-http">[I-D.ietf-quic-http]</a> such as stream-multiplexing to avoid head-of-line blocking. Based on current deployment practices, QUIC is encapsulated in UDP and encrypted by default. This means the version of QUIC that is currently under development will integrate TLS 1.3 <a href="#I-D.ietf-quic-tls">[I-D.ietf-quic-tls]</a> to encrypt all payload data including all header information needed for for stream-multiplexing and most on the  other header information. Given QUIC is an end-to-end transport protocol, all information in the protocol header is not meant to be mutable by the network, and will therefore be integrity- protected to the extent possible.</p>
 <p id="rfc.section.1.p.2">This document serves two purposes:</p>
 <p/>
 
 <ol>
-  <li>It provides guidance for application developers that want to use the QUIC protocol without implementing it on their own. This includes general guidance for application use of HTTP/3 over QUIC as well as the use of other application layer protocols over QUIC. For specific guidance on how to integrate HTTP/2 with quick see <a href="#I-D.ietf-quic-http">[I-D.ietf-quic-http]</a>.</li>
+  <li>It provides guidance for application developers that want to use the QUIC protocol without implementing it on their own. This includes general guidance for application use of HTTP/2 over QUIC as well as the use of other application layer protocols over QUIC. For specific guidance on how to integrate HTTP/2 with QUIC, see <a href="#I-D.ietf-quic-http">[I-D.ietf-quic-http]</a>.</li>
   <li>It provides guidance for network operation and management of QUIC traffic.  This includes guidance on how to interpret and utilize information that is exposed by QUIC to the network as well as explaining requirement and assumption that the QUIC protocol design takes toward the expected network treatment.</li>
 </ol>
 <h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#notational-conventions" id="notational-conventions">Notational Conventions</a></h1>
@@ -406,8 +406,8 @@ address {
 <p id="rfc.section.2.2.p.2">[EDITOR&#8217;S NOTE: discuss defenses against replay attacks using 0-RTT data.]</p>
 <h1 id="rfc.section.2.3"><a href="#rfc.section.2.3">2.3.</a> <a href="#stream-versus-flow-multiplexing" id="stream-versus-flow-multiplexing">Stream versus Flow Multiplexing</a></h1>
 <p id="rfc.section.2.3.p.1">QUIC&#8217;s stream multiplexing feature allows applications to run multiple streams over a single connection, without head-of-line blocking between streams, associated at a point in time with a single five-tuple. Streams are meaningful only to the application; since stream information is carried inside QUIC&#8217;s encryption boundary, no information about the stream(s) whose frames are carried by a given packet is visible to the network.</p>
-<p id="rfc.section.2.3.p.2">Stream multiplexing is not intended to be used for differentiating streams in terms of network treatment. Application traffic requiring different network treatment should therefore be carried over different five-tuples (i.e.  multiple QUIC connections). Given  QUIC&#8217;s ability to send application data on the first packet of a connection  (if a previous connection to the same host has been successfully established to provide the respective credentials), the cost for establishing another connection are extremely low.</p>
-<p id="rfc.section.2.3.p.3">[EDITOR&#8217;S NOTE: For discussion: If establishing a new connection does seem to be sufficient, the protocol&#8217;s rebinding functionality (see section 3.7 of <a href="#I-D.ietf-quic-transport">[I-D.ietf-quic-transport]</a>) could be extended to allow multiple five-tuples to share a connection ID simultaneously, instead of sequentially.]</p>
+<p id="rfc.section.2.3.p.2">Stream multiplexing is not intended to be used for differentiating streams in terms of network treatment. Application traffic requiring different network treatment should therefore be carried over different five-tuples (i.e.  multiple QUIC connections). Given QUIC&#8217;s ability to send application data on the first packet of a connection (if a previous connection to the same host has been successfully established to provide the respective credentials), the cost for establishing another connection are extremely low.</p>
+<p id="rfc.section.2.3.p.3">[EDITOR&#8217;S NOTE: For discussion: If establishing a new connection does not seem to be sufficient, the protocol&#8217;s rebinding functionality (see section 3.7 of <a href="#I-D.ietf-quic-transport">[I-D.ietf-quic-transport]</a>) could be extended to allow multiple five-tuples to share a connection ID simultaneously, instead of sequentially.]</p>
 <h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#manageability-of-quic" id="manageability-of-quic">Manageability of QUIC</a></h1>
 <p id="rfc.section.3.p.1">This section discusses those aspects of the QUIC transport protocol that have an impact on the design and operation of devices that forward QUIC packets.  This section is concerned primarily with QUIC&#8217;s unencrypted wire image, which we define as the information available in the packet header in each QUIC packet, and the dynamics of that information.</p>
 <p id="rfc.section.3.p.2">QUIC is a versioned protocol. Everything about the header format can change except the mechanism by which a receiver can determine whether and where a version number is present, and the meaning of the version number field itself.</p>
@@ -417,9 +417,9 @@ address {
 <p/>
 
 <ul>
-  <li>flags: All QUIC packets have one byte of flags at the beginning of their header. The definition of these flags can change with the version of QUIC, expect for the version flag that indicated that the version number is present in the QUIC header. Other bits of the flag field in the current version of QUIC are the connection ID flag, the packet number size field, the public reset flag, and the kay phase flag.</li>
+  <li>flags: All QUIC packets have one byte of flags at the beginning of their header. The definition of these flags can change with the version of QUIC, expect for the version flag that indicated that the version number is present in the QUIC header. Other bits of the flag field in the current version of QUIC are the connection ID flag, the packet number size field, the public reset flag, and the key phase flag.</li>
   <li>version number: The version number is present if the version bit in the flags field is set. The version flag is always set in the first packet of a connection but could also be set in other packets.</li>
-  <li>connection ID: The connection ID is present if the connection ID bit in the flag field is set. The connection ID flag is always set on the first packet of a connection and can be set on others. Further the connection ID flag is always set when the public reset bit is set as well. QUIC connections are resistant to IP address rebindings. Therefore if exposed, the same connection ID can occur in QUIC packet with different 5-tuples, indicating that this QUIC packet belongs to the same connection.</li>
+  <li>connection ID: The connection ID is present if the connection ID bit in the flag field is set. The connection ID flag is always set on the first packet of a connection and can be set on others. Further the connection ID flag is always set when the public reset bit is set as well. QUIC connections are resistant to IP address changes. Therefore if exposed, the same connection ID can occur in QUIC packet with different 5-tuples, indicating that this QUIC packet belongs to the same connection.</li>
   <li>packet number: The packet number is variable length as indicated by packet number size field. If the length is indicated as zero the packet number is not present. If the public reset flag is set, the packet number cannot be present.</li>
   <li>diversification nonce [EDITOR&#8217;S NOTE: talk about this once it&#8217;s clear what it will be&#8230;]</li>
 </ul>
@@ -429,7 +429,7 @@ address {
 <p id="rfc.section.3.3.p.1">A flow might change one of its IP addresses but keep the same connection ID, as discussed in <a href="#public-header">Section 3.1</a>. [EDITOR&#8217;S NOTE: What does that mean for the network, if anything (given the connection ID is only rarely present)?]</p>
 <h1 id="rfc.section.3.4"><a href="#rfc.section.3.4">3.4.</a> <a href="#packet-numbers" id="packet-numbers">Packet Numbers</a></h1>
 <p id="rfc.section.3.4.p.1">Packet numbers are monotonically increasing. Packets containing retransmissions as well as packets containing only control information, such as acknowledgments, will get a new packet numbers. Therefore pure control and retransmission packets are impossible to distinguish on the wire.</p>
-<p id="rfc.section.3.4.p.2">While loss detection in QUIC is still based on packet numbers, congestion control by default provides richer information that plain TCP does.  Especially, QUIC does not rely on duplicated ACKs, making it more tolerant of packet re-ordering.</p>
+<p id="rfc.section.3.4.p.2">While loss detection in QUIC is still based on packet numbers, congestion control by default provides richer information than vanilla TCP does.  Especially, QUIC does not rely on duplicated ACKs, making it more tolerant of packet re-ordering.</p>
 <h1 id="rfc.section.3.5"><a href="#rfc.section.3.5">3.5.</a> <a href="#statefulness" id="statefulness">Stateful Treatment of QUIC Traffic</a></h1>
 <p id="rfc.section.3.5.p.1">Stateful network devices such as firewalls use exposed header information to support state setup and tear-down. In-line with <a href="#I-D.trammell-plus-statefulness">[I-D.trammell-plus-statefulness]</a> (which provides a general model for in- network state management), the presence of a Connection ID on QUIC traffic can be used as an association/confirmation signal; QUIC&#8217;s public reset may be used as a partial one-way stop signal.</p>
 <p id="rfc.section.3.5.p.2">[EDITOR&#8217;S NOTE: note public reset changes for state management may be desirable: two-way stop as in <a href="#I-D.trammell-plus-statefulness">[I-D.trammell-plus-statefulness]</a> has nice properties.]</p>

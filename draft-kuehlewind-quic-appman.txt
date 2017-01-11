@@ -9,7 +9,7 @@ Expires: July 15, 2017                                  January 11, 2017
 
 
       Applicability and Management of the QUIC Transport Protocol
-                  draft-kuehlewind-quic-appman-latest
+                    draft-kuehlewind-quic-appman-00
 
 Abstract
 
@@ -89,21 +89,21 @@ Table of Contents
    stream-multiplexing to avoid head-of-line blocking.  Based on current
    deployment practices, QUIC is encapsulated in UDP and encrypted by
    default.  This means the version of QUIC that is currently under
-   development will integrate TLS 1.3 {{I-D.ietf-quic- tls}} to encrypt
-   all payload data including all header information needed for for
-   stream-multiplexing and most on the other header information.  Given
-   QUIC is an end-to-end transport protocol, all information in the
-   protocol header is not meant to be mutable by the network, and will
-   therefore be integrity- protected to the extent possible.
+   development will integrate TLS 1.3 [I-D.ietf-quic-tls] to encrypt all
+   payload data including all header information needed for for stream-
+   multiplexing and most on the other header information.  Given QUIC is
+   an end-to-end transport protocol, all information in the protocol
+   header is not meant to be mutable by the network, and will therefore
+   be integrity- protected to the extent possible.
 
    This document serves two purposes:
 
    1.  It provides guidance for application developers that want to use
        the QUIC protocol without implementing it on their own.  This
-       includes general guidance for application use of HTTP/3 over QUIC
+       includes general guidance for application use of HTTP/2 over QUIC
        as well as the use of other application layer protocols over
        QUIC.  For specific guidance on how to integrate HTTP/2 with
-       quick see [I-D.ietf-quic-http].
+       QUIC, see [I-D.ietf-quic-http].
 
 
 
@@ -205,10 +205,10 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
    cost for establishing another connection are extremely low.
 
    [EDITOR'S NOTE: For discussion: If establishing a new connection does
-   seem to be sufficient, the protocol's rebinding functionality (see
-   section 3.7 of [I-D.ietf-quic-transport]) could be extended to allow
-   multiple five-tuples to share a connection ID simultaneously, instead
-   of sequentially.]
+   not seem to be sufficient, the protocol's rebinding functionality
+   (see section 3.7 of [I-D.ietf-quic-transport]) could be extended to
+   allow multiple five-tuples to share a connection ID simultaneously,
+   instead of sequentially.]
 
 3.  Manageability of QUIC
 
@@ -246,7 +246,7 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
       the version number is present in the QUIC header.  Other bits of
       the flag field in the current version of QUIC are the connection
       ID flag, the packet number size field, the public reset flag, and
-      the kay phase flag.
+      the key phase flag.
 
    o  version number: The version number is present if the version bit
       in the flags field is set.  The version flag is always set in the
@@ -258,9 +258,9 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
       set on the first packet of a connection and can be set on others.
       Further the connection ID flag is always set when the public reset
       bit is set as well.  QUIC connections are resistant to IP address
-      rebindings.  Therefore if exposed, the same connection ID can
-      occur in QUIC packet with different 5-tuples, indicating that this
-      QUIC packet belongs to the same connection.
+      changes.  Therefore if exposed, the same connection ID can occur
+      in QUIC packet with different 5-tuples, indicating that this QUIC
+      packet belongs to the same connection.
 
    o  packet number: The packet number is variable length as indicated
       by packet number size field.  If the length is indicated as zero
@@ -305,9 +305,9 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
    distinguish on the wire.
 
    While loss detection in QUIC is still based on packet numbers,
-   congestion control by default provides richer information that plain
-   TCP does.  Especially, QUIC does not rely on duplicated ACKs, making
-   it more tolerant of packet re-ordering.
+   congestion control by default provides richer information than
+   vanilla TCP does.  Especially, QUIC does not rely on duplicated ACKs,
+   making it more tolerant of packet re-ordering.
 
 3.5.  Stateful Treatment of QUIC Traffic
 
