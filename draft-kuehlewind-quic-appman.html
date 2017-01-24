@@ -289,7 +289,6 @@ address {
 <link href="#rfc.section.3.3" rel="Chapter" title="3.3 Connection ID and Rebinding"/>
 <link href="#rfc.section.3.4" rel="Chapter" title="3.4 Packet Numbers"/>
 <link href="#rfc.section.3.5" rel="Chapter" title="3.5 Stateful Treatment of QUIC Traffic"/>
-<link href="#rfc.section.3.6" rel="Chapter" title="3.6 Measuring QUIC Traffic"/>
 <link href="#rfc.section.4" rel="Chapter" title="4 IANA Considerations"/>
 <link href="#rfc.section.5" rel="Chapter" title="5 Security Considerations"/>
 <link href="#rfc.section.6" rel="Chapter" title="6 Acknowledgments"/>
@@ -373,7 +372,6 @@ address {
 <li>3.3.   <a href="#rfc.section.3.3">Connection ID and Rebinding</a></li>
 <li>3.4.   <a href="#rfc.section.3.4">Packet Numbers</a></li>
 <li>3.5.   <a href="#rfc.section.3.5">Stateful Treatment of QUIC Traffic</a></li>
-<li>3.6.   <a href="#rfc.section.3.6">Measuring QUIC Traffic</a></li>
 </ul><li>4.   <a href="#rfc.section.4">IANA Considerations</a></li>
 <li>5.   <a href="#rfc.section.5">Security Considerations</a></li>
 <li>6.   <a href="#rfc.section.6">Acknowledgments</a></li>
@@ -429,13 +427,15 @@ address {
 <h1 id="rfc.section.3.4"><a href="#rfc.section.3.4">3.4.</a> <a href="#packet-numbers" id="packet-numbers">Packet Numbers</a></h1>
 <p id="rfc.section.3.4.p.1">Packet numbers are monotonically increasing. Packets containing retransmissions as well as packets containing only control information, such as acknowledgments, will get a new packet numbers. Therefore pure control and retransmission packets are impossible to distinguish on the wire.</p>
 <p id="rfc.section.3.4.p.2">While loss detection in QUIC is still based on packet numbers, congestion control by default provides richer information than vanilla TCP does.  Especially, QUIC does not rely on duplicated ACKs, making it more tolerant of packet re-ordering.</p>
+<p id="rfc.section.3.4.p.3">[EDITOR&#8217;S NOTE: packet numbers could be skipped; name cases where this is proposed and advise to monitor average link loss rate and disregard overly high loss rates]</p>
+<p id="rfc.section.3.4.p.4">[EDITORS&#8217;S NOTE: Also for multipath: would packet number be shared in this case?]</p>
 <h1 id="rfc.section.3.5"><a href="#rfc.section.3.5">3.5.</a> <a href="#statefulness" id="statefulness">Stateful Treatment of QUIC Traffic</a></h1>
 <p id="rfc.section.3.5.p.1">Stateful network devices such as firewalls use exposed header information to support state setup and tear-down. In-line with <a href="#I-D.trammell-plus-statefulness">[I-D.trammell-plus-statefulness]</a> (which provides a general model for in- network state management), the presence of a Connection ID on QUIC traffic can be used as an association/confirmation signal; QUIC&#8217;s public reset may be used as a partial one-way stop signal.</p>
 <p id="rfc.section.3.5.p.2">[EDITOR&#8217;S NOTE: note public reset changes for state management may be desirable: two-way stop as in <a href="#I-D.trammell-plus-statefulness">[I-D.trammell-plus-statefulness]</a> has nice properties.]</p>
-<h1 id="rfc.section.3.6"><a href="#rfc.section.3.6">3.6.</a> <a href="#measuring-quic-traffic" id="measuring-quic-traffic">Measuring QUIC Traffic</a></h1>
-<p id="rfc.section.3.6.p.1">Given packet numbers can be expected to be exposed on most packets (expect public reset but that terminates the connection anyway), packet numbers can be used by the network to measure loss that occurred between the sender and the measurement point in the network. Similarly, out-of-order packets indicate upstream reordering. Unlike with TCP, there is no way to measure downstream loss and RTT passively.</p>
-<p id="rfc.section.3.6.p.2">[EDITOR&#8217;S NOTE: the addition of a simple packet number echo would allow passive RTT measurement and partial passive downstream loss/reordering measurement. Packet number echo can be sampled at the echo-side (i.e. one-in-N packets or 1/p packets can carry an echo) for efficiency tradeoff, if necessary.]</p>
-<p id="rfc.section.3.6.p.3">[EDITOR&#8217;S NOTE: in-network devices can inspect and correlate connection IDs for partial tracking of mobility events.]</p>
+<p id="rfc.section.3.5.p.3">[EDITOR&#8217;S NOTE: is the first packet spcial? It can probably be identified but don&#8217;t misuse this information&#8230;?] ## Measuring QUIC Traffic</p>
+<p id="rfc.section.3.5.p.4">Given packet numbers can be expected to be exposed on most packets (expect public reset but that terminates the connection anyway), packet numbers can be used by the network to measure loss that occurred between the sender and the measurement point in the network. Similarly, out-of-order packets indicate upstream reordering. Unlike with TCP, there is no way to measure downstream loss and RTT passively.</p>
+<p id="rfc.section.3.5.p.5">[EDITOR&#8217;S NOTE: the addition of a simple packet number echo would allow passive RTT measurement and partial passive downstream loss/reordering measurement. Packet number echo can be sampled at the echo-side (i.e. one-in-N packets or 1/p packets can carry an echo) for efficiency tradeoff, if necessary.]</p>
+<p id="rfc.section.3.5.p.6">[EDITOR&#8217;S NOTE: in-network devices can inspect and correlate connection IDs for partial tracking of mobility events.]</p>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a></h1>
 <p id="rfc.section.4.p.1">This document has no actions for IANA.</p>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a></h1>
