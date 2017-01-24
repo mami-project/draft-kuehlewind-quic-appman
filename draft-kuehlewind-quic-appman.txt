@@ -5,11 +5,11 @@
 Network Working Group                                      M. Kuehlewind
 Internet-Draft                                               B. Trammell
 Intended status: Informational                                ETH Zurich
-Expires: July 15, 2017                                  January 11, 2017
+Expires: July 28, 2017                                  January 24, 2017
 
 
       Applicability and Management of the QUIC Transport Protocol
-                    draft-kuehlewind-quic-appman-00
+                  draft-kuehlewind-quic-appman-latest
 
 Abstract
 
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on July 15, 2017.
+   This Internet-Draft will expire on July 28, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Kuehlewind & Trammell     Expires July 15, 2017                 [Page 1]
+Kuehlewind & Trammell     Expires July 28, 2017                 [Page 1]
 
 Internet-DrafApplicability and Management of the QUIC Trans January 2017
 
@@ -68,7 +68,7 @@ Table of Contents
      2.3.  Stream versus Flow Multiplexing . . . . . . . . . . . . .   4
    3.  Manageability of QUIC . . . . . . . . . . . . . . . . . . . .   4
      3.1.  QUIC Public Header Structure  . . . . . . . . . . . . . .   5
-     3.2.  Integrity Protection of the Wire Image  . . . . . . . . .   6
+     3.2.  Integrity Protection of the Wire Image  . . . . . . . . .   5
      3.3.  Connection ID and Rebinding . . . . . . . . . . . . . . .   6
      3.4.  Packet Numbers  . . . . . . . . . . . . . . . . . . . . .   6
      3.5.  Stateful Treatment of QUIC Traffic  . . . . . . . . . . .   6
@@ -78,7 +78,7 @@ Table of Contents
    6.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   7
    7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
      7.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .   8
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .   7
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Kuehlewind & Trammell     Expires July 15, 2017                 [Page 2]
+Kuehlewind & Trammell     Expires July 28, 2017                 [Page 2]
 
 Internet-DrafApplicability and Management of the QUIC Trans January 2017
 
@@ -165,7 +165,7 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
 
 
 
-Kuehlewind & Trammell     Expires July 15, 2017                 [Page 3]
+Kuehlewind & Trammell     Expires July 28, 2017                 [Page 3]
 
 Internet-DrafApplicability and Management of the QUIC Trans January 2017
 
@@ -221,7 +221,7 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
 
 
 
-Kuehlewind & Trammell     Expires July 15, 2017                 [Page 4]
+Kuehlewind & Trammell     Expires July 28, 2017                 [Page 4]
 
 Internet-DrafApplicability and Management of the QUIC Trans January 2017
 
@@ -267,27 +267,20 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
       the packet number is not present.  If the public reset flag is
       set, the packet number cannot be present.
 
-   o  diversification nonce [EDITOR'S NOTE: talk about this once it's
-      clear what it will be...]
-
-
-
-
-
-
-
-
-Kuehlewind & Trammell     Expires July 15, 2017                 [Page 5]
-
-Internet-DrafApplicability and Management of the QUIC Trans January 2017
-
-
 3.2.  Integrity Protection of the Wire Image
 
    All information in the QUIC header, even if exposed to the network,
    is integrity protected, therefore a device on the network path MUST
    not change these information.  Altering of header information would
    fail any integrity check, leading to packet drop at the receiver.
+
+
+
+
+Kuehlewind & Trammell     Expires July 28, 2017                 [Page 5]
+
+Internet-DrafApplicability and Management of the QUIC Trans January 2017
+
 
 3.3.  Connection ID and Rebinding
 
@@ -329,15 +322,6 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
    packet numbers can be used by the network to measure loss that
    occurred between the sender and the measurement point in the network.
    Similarly, out-of-order packets indicate upstream reordering.  Unlike
-
-
-
-
-Kuehlewind & Trammell     Expires July 15, 2017                 [Page 6]
-
-Internet-DrafApplicability and Management of the QUIC Trans January 2017
-
-
    with TCP, there is no way to measure downstream loss and RTT
    passively.
 
@@ -346,6 +330,13 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
    reordering measurement.  Packet number echo can be sampled at the
    echo-side (i.e. one-in-N packets or 1/p packets can carry an echo)
    for efficiency tradeoff, if necessary.]
+
+
+
+Kuehlewind & Trammell     Expires July 28, 2017                 [Page 6]
+
+Internet-DrafApplicability and Management of the QUIC Trans January 2017
+
 
    [EDITOR'S NOTE: in-network devices can inspect and correlate
    connection IDs for partial tracking of mobility events.]
@@ -374,25 +365,13 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
 
    [I-D.ietf-quic-transport]
               Iyengar, J. and M. Thomson, "QUIC: A UDP-Based Multiplexed
-              and Secure Transport", draft-ietf-quic-transport-00 (work
-              in progress), November 2016.
+              and Secure Transport", draft-ietf-quic-transport-01 (work
+              in progress), January 2017.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
-
-
-
-
-
-
-
-
-Kuehlewind & Trammell     Expires July 15, 2017                 [Page 7]
-
-Internet-DrafApplicability and Management of the QUIC Trans January 2017
-
 
 7.2.  Informative References
 
@@ -403,13 +382,22 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
 
    [I-D.ietf-quic-http]
               Bishop, M., "Hypertext Transfer Protocol (HTTP) over
-              QUIC", draft-ietf-quic-http-00 (work in progress),
-              November 2016.
+              QUIC", draft-ietf-quic-http-01 (work in progress), January
+              2017.
+
+
+
+
+
+Kuehlewind & Trammell     Expires July 28, 2017                 [Page 7]
+
+Internet-DrafApplicability and Management of the QUIC Trans January 2017
+
 
    [I-D.ietf-quic-tls]
               Thomson, M. and (. (Unknown), "Using Transport Layer
-              Security (TLS) to Secure QUIC", draft-ietf-quic-tls-00
-              (work in progress), November 2016.
+              Security (TLS) to Secure QUIC", draft-ietf-quic-tls-01
+              (work in progress), January 2017.
 
    [I-D.trammell-plus-statefulness]
               Kuehlewind, M., Trammell, B., and J. Hildebrand,
@@ -436,20 +424,6 @@ Authors' Addresses
    Email: mirja.kuehlewind@tik.ee.ethz.ch
 
 
-
-
-
-
-
-
-
-
-
-Kuehlewind & Trammell     Expires July 15, 2017                 [Page 8]
-
-Internet-DrafApplicability and Management of the QUIC Trans January 2017
-
-
    Brian Trammell
    ETH Zurich
    Gloriastrasse 35
@@ -471,34 +445,4 @@ Internet-DrafApplicability and Management of the QUIC Trans January 2017
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Kuehlewind & Trammell     Expires July 15, 2017                 [Page 9]
+Kuehlewind & Trammell     Expires July 28, 2017                 [Page 8]
