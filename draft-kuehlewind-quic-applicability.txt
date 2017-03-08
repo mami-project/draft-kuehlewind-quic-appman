@@ -147,7 +147,7 @@ Internet-DraftApplicability of the QUIC Transport Protocol    March 2017
    We hope that the deployment of a proposed standard version of the
    QUIC protocol will provide an incentive for these networks to permit
    QUIC traffic.  Indeed, the ability to treat QUIC traffic statefully
-   as discussed in section XX of [draft-kuehlewind-quic-manageability]
+   as discussed in section 3.1 of [draft-kuehlewind-quic-manageability]
    would remove one network management incentive to block this traffic.
 
 3.  Zero RTT: Here There Be Dragons
