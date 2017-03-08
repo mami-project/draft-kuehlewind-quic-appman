@@ -5,7 +5,7 @@
 Network Working Group                                      M. Kuehlewind
 Internet-Draft                                               B. Trammell
 Intended status: Informational                                ETH Zurich
-Expires: September 2, 2017                                March 01, 2017
+Expires: September 9, 2017                                March 08, 2017
 
 
               Applicability of the QUIC Transport Protocol
@@ -34,7 +34,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 2, 2017.
+   This Internet-Draft will expire on September 9, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Kuehlewind & Trammell   Expires September 2, 2017               [Page 1]
+Kuehlewind & Trammell   Expires September 9, 2017               [Page 1]
 
 Internet-DraftApplicability of the QUIC Transport Protocol    March 2017
 
@@ -62,16 +62,15 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
      1.1.  Notational Conventions  . . . . . . . . . . . . . . . . .   2
-   2.  The Necessity of Fallback . . . . . . . . . . . . . . . . . .   3
+   2.  The Necessity of Fallback . . . . . . . . . . . . . . . . . .   2
    3.  Zero RTT: Here There Be Dragons . . . . . . . . . . . . . . .   3
    4.  Stream versus Flow Multiplexing . . . . . . . . . . . . . . .   4
-   5.  Prioritization  . . . . . . . . . . . . . . . . . . . . . . .   4
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   4
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   4
-   8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   5
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   5
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   5
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .   5
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   4
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   4
+   7.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   4
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   5
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .   5
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .   5
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   6
 
 1.  Introduction
@@ -102,23 +101,19 @@ Table of Contents
    document.  It's not shouting; when these words are capitalized, they
    have a special meaning as defined in [RFC2119].
 
-
-
-
-
-
-
-
-Kuehlewind & Trammell   Expires September 2, 2017               [Page 2]
-
-Internet-DraftApplicability of the QUIC Transport Protocol    March 2017
-
-
 2.  The Necessity of Fallback
 
    QUIC uses UDP as a substrate for userspace implementation and port
    numbers for NAT and middlebox traversal.  While there is no evidence
    of widespread, systematic disadvantage of UDP traffic compared to TCP
+
+
+
+Kuehlewind & Trammell   Expires September 9, 2017               [Page 2]
+
+Internet-DraftApplicability of the QUIC Transport Protocol    March 2017
+
+
    in the Internet [Edeline16], somewhere between three [Trammell16] and
    five [Swett16] percent of networks simply block UDP traffic.  All
    applications running on top of QUIC must therefore either be prepared
@@ -137,12 +132,11 @@ Internet-DraftApplicability of the QUIC Transport Protocol    March 2017
    resumption.  TCP Fast Open could be used, but might no be supported
    by the far end or could be blocked on the network path.  Note that
    there is some evidence of middleboxes blocking SYN data even if TFO
-   was successfully negotiated.  [EDITOR'S NOTE: cite Christoph Paasch's
-   NANOG presentation here] Moreover, while encryption (in this case
-   TLS) is inseparable integrated with QUIC, TLS negotiation over TCP
-   can be blocked.  In case it is RECOMMENDED to abort the connection,
-   allowing the application to present a suitable prompt to the user
-   that secure communication is unavailable.
+   was successfully negotiated (see [PaaschNanog]).  Moreover, while
+   encryption (in this case TLS) is inseparable integrated with QUIC,
+   TLS negotiation over TCP can be blocked.  In case it is RECOMMENDED
+   to abort the connection, allowing the application to present a
+   suitable prompt to the user that secure communication is unavailable.
 
    We hope that the deployment of a proposed standard version of the
    QUIC protocol will provide an incentive for these networks to permit
@@ -162,17 +156,19 @@ Internet-DraftApplicability of the QUIC Transport Protocol    March 2017
    application-layer mechanism for recognizing spuriously retransmitted
    frames and dropping them.
 
-
-
-
-Kuehlewind & Trammell   Expires September 2, 2017               [Page 3]
-
-Internet-DraftApplicability of the QUIC Transport Protocol    March 2017
-
-
    Applications that cannot treat data that may appear in a 0-RTT
    connection establishment as idempotent MUST NOT use 0-RTT
    establishment.
+
+
+
+
+
+
+Kuehlewind & Trammell   Expires September 9, 2017               [Page 3]
+
+Internet-DraftApplicability of the QUIC Transport Protocol    March 2017
+
 
 4.  Stream versus Flow Multiplexing
 
@@ -199,15 +195,11 @@ Internet-DraftApplicability of the QUIC Transport Protocol    March 2017
    allow multiple five-tuples to share a connection ID simultaneously,
    instead of sequentially.]
 
-5.  Prioritization
-
-   [EDITOR'S NOTE: Is there anything to say here?]
-
-6.  IANA Considerations
+5.  IANA Considerations
 
    This document has no actions for IANA.
 
-7.  Security Considerations
+6.  Security Considerations
 
    See the security considerations in [I-D.ietf-quic-transport] and
    [I-D.ietf-quic-tls]; the security considerations for the underlying
@@ -219,14 +211,7 @@ Internet-DraftApplicability of the QUIC Transport Protocol    March 2017
    connection SHOULD fail to allow the application to explicitly handle
    fallback to a less-secure alternative.  See Section 2.
 
-
-
-Kuehlewind & Trammell   Expires September 2, 2017               [Page 4]
-
-Internet-DraftApplicability of the QUIC Transport Protocol    March 2017
-
-
-8.  Acknowledgments
+7.  Acknowledgments
 
    This work is partially supported by the European Commission under
    Horizon 2020 grant agreement no. 688421 Measurement and Architecture
@@ -234,9 +219,16 @@ Internet-DraftApplicability of the QUIC Transport Protocol    March 2017
    for Education, Research, and Innovation under contract no. 15.0268.
    This support does not imply endorsement.
 
-9.  References
 
-9.1.  Normative References
+
+Kuehlewind & Trammell   Expires September 9, 2017               [Page 4]
+
+Internet-DraftApplicability of the QUIC Transport Protocol    March 2017
+
+
+8.  References
+
+8.1.  Normative References
 
    [I-D.ietf-quic-tls]
               Thomson, M. and S. Turner, "Using Transport Layer Security
@@ -253,7 +245,7 @@ Internet-DraftApplicability of the QUIC Transport Protocol    March 2017
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
 
-9.2.  Informative References
+8.2.  Informative References
 
    [draft-kuehlewind-quic-manageability]
               Kuehlewind, M. and B. Trammell, "Manageability of the QUIC
@@ -269,23 +261,26 @@ Internet-DraftApplicability of the QUIC Transport Protocol    March 2017
               QUIC", draft-ietf-quic-http-01 (work in progress), January
               2017.
 
+   [PaaschNanog]
+              Paasch, C., "Network Ssupport for TCP Fast Open (NANOG 67
+              presentation)", June 2016.
+
    [Swett16]  Swett, I., "QUIC Deployment Experience at Google (IETF96
               QUIC BoF presentation)", July 2016.
-
-
-
-
-
-
-Kuehlewind & Trammell   Expires September 2, 2017               [Page 5]
-
-Internet-DraftApplicability of the QUIC Transport Protocol    March 2017
-
 
    [Trammell16]
               Trammell, B. and M. Kuehlewind, "Internet Path
               Transparency Measurements using RIPE Atlas (RIPE72 MAT
               presentation)", May 2016.
+
+
+
+
+
+Kuehlewind & Trammell   Expires September 9, 2017               [Page 5]
+
+Internet-DraftApplicability of the QUIC Transport Protocol    March 2017
+
 
 Authors' Addresses
 
@@ -333,4 +328,9 @@ Authors' Addresses
 
 
 
-Kuehlewind & Trammell   Expires September 2, 2017               [Page 6]
+
+
+
+
+
+Kuehlewind & Trammell   Expires September 9, 2017               [Page 6]

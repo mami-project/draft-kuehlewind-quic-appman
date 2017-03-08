@@ -298,12 +298,12 @@ address {
 <link href="#rfc.authors" rel="Chapter"/>
 
 
-  <meta name="generator" content="xml2rfc version 2.5.2 - http://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 2.5.1 - http://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Kuehlewind, M. and B. Trammell" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-kuehlewind-quic-manageability-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-3-01" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-3-08" />
   <meta name="dct.abstract" content="This document discusses manageability of the QUIC transport protocol, focusing on caveats impacting network operations involving QUIC traffic. Its intended audience is network operators, as well as implementors of the QUIC transport protocol and applications using it." />
   <meta name="description" content="This document discusses manageability of the QUIC transport protocol, focusing on caveats impacting network operations involving QUIC traffic. Its intended audience is network operators, as well as implementors of the QUIC transport protocol and applications using it." />
 
@@ -327,8 +327,8 @@ address {
   <td class="right">ETH Zurich</td>
 </tr>
 <tr>
-  <td class="left">Expires: September 2, 2017</td>
-  <td class="right">March 01, 2017</td>
+  <td class="left">Expires: September 9, 2017</td>
+  <td class="right">March 08, 2017</td>
 </tr>
 
     	
@@ -348,7 +348,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on September 2, 2017.</p>
+<p>This Internet-Draft will expire on September 9, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -407,6 +407,7 @@ address {
 <h1 id="rfc.section.2.3"><a href="#rfc.section.2.3">2.3.</a> <a href="#rebinding" id="rebinding">Connection ID and Rebinding</a></h1>
 <p id="rfc.section.2.3.p.1">The connection ID in the QUIC packer header is used to allow routing of QUIC packets at load balancers on other than five-tuple information, ensuring that related flows are appropriately balanced together; and to allow rebinding of a connection after one of the endpoint&#8217;s addresses changes - usually the client&#8217;s, in the case of the HTTP binding. The connection ID is proposed by the server during connection establishment [EDITOR&#8217;S NOTE: check this].</p>
 <p id="rfc.section.2.3.p.2">A flow might change one of its IP addresses but keep the same connection ID, as noted in <a href="#public-header">Section 2.1</a> [EDITOR&#8217;S NOTE: refer to the appropriate section of <a href="#I-D.ietf-quic-transport">[I-D.ietf-quic-transport]</a> for details on how rebinding works].</p>
+<p id="rfc.section.2.3.p.3">[EDITOR&#8217;S NOTE: Update this section to explain that connection ID may change after &#8216;handshake&#8217; if connection ID is server initiated. ]</p>
 <h1 id="rfc.section.2.4"><a href="#rfc.section.2.4">2.4.</a> <a href="#packet-numbers" id="packet-numbers">Packet Numbers</a></h1>
 <p id="rfc.section.2.4.p.1">The packet number field is always present in the QUIC packet header. The packet number exposes the least significant 32, 16, or 8 bits of an internal packet counter per flow direction that increments by one with each packet sent [EDITOR&#8217;S NOTE: make sure this has been done now]. This packet counter is initialized with a random 31-bit initial value at the start of a connection.</p>
 <p id="rfc.section.2.4.p.2">Unlike TCP sequence numbers, this packet number increases with every packet, including those containing only acknowledgment or other control information.  Indeed, whether a packet contains user data or only control information is intentionally left unexposed to the network [EDITOR&#8217;S NOTE: currently outstanding PRs may change this?].</p>
