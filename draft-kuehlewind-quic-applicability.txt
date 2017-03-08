@@ -9,7 +9,7 @@ Expires: September 9, 2017                                March 08, 2017
 
 
               Applicability of the QUIC Transport Protocol
-               draft-kuehlewind-quic-applicability-latest
+                 draft-kuehlewind-quic-applicability-00
 
 Abstract
 
