@@ -5,7 +5,9 @@
 Network Working Group                                      M. Kuehlewind
 Internet-Draft                                               B. Trammell
 Intended status: Informational                                ETH Zurich
-Expires: September 9, 2017                                March 08, 2017
+Expires: September 10, 2017                                     D. Druta
+                                                                    AT&T
+                                                          March 09, 2017
 
 
               Manageability of the QUIC Transport Protocol
@@ -34,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 9, 2017.
+   This Internet-Draft will expire on September 10, 2017.
 
 Copyright Notice
 
@@ -48,15 +50,16 @@ Copyright Notice
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
    include Simplified BSD License text as described in Section 4.e of
-   the Trust Legal Provisions and are provided without warranty as
-   described in the Simplified BSD License.
 
 
 
-Kuehlewind & Trammell   Expires September 9, 2017               [Page 1]
+Kuehlewind, et al.     Expires September 10, 2017               [Page 1]
 
 Internet-DraftManageability of the QUIC Transport Protocol    March 2017
 
+
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
 
 Table of Contents
 
@@ -103,17 +106,17 @@ Table of Contents
    also discusses how common network management practices will be
    impacted by QUIC.
 
-   Of course, network management is not a one-size-fits-all endeavour:
-   practices considered necessary or even mandatory within enterprise
-   networks with certain compliance requirements, for example, would be
 
 
 
-Kuehlewind & Trammell   Expires September 9, 2017               [Page 2]
+Kuehlewind, et al.     Expires September 10, 2017               [Page 2]
 
 Internet-DraftManageability of the QUIC Transport Protocol    March 2017
 
 
+   Of course, network management is not a one-size-fits-all endeavour:
+   practices considered necessary or even mandatory within enterprise
+   networks with certain compliance requirements, for example, would be
    impermissible on other networks without those requirements.  This
    document therefore does not make any specific recommendations as to
    which practices should or should not be applied; for each practice,
@@ -160,15 +163,15 @@ Internet-DraftManageability of the QUIC Transport Protocol    March 2017
    limited unnecessary header overhead.  The following information may
    be exposed in the packet header:
 
-   o  version number: The version number is present during version
-      negotiation.
 
 
-
-Kuehlewind & Trammell   Expires September 9, 2017               [Page 3]
+Kuehlewind, et al.     Expires September 10, 2017               [Page 3]
 
 Internet-DraftManageability of the QUIC Transport Protocol    March 2017
 
+
+   o  version number: The version number is present during version
+      negotiation.
 
    o  connection ID: The connection ID identifies the connection
       associated with a QUIC packet, for load-balancing and NAT
@@ -215,16 +218,17 @@ Internet-DraftManageability of the QUIC Transport Protocol    March 2017
    connection establishment.  A flow might change one of its IP
    addresses but keep the same connection ID, as noted in Section 2.1,
    and the connection ID may change during a connection as well; see
-   section 6.3 of [I-D.ietf-quic-transport].  See also
-   https://github.com/quicwg/base-drafts/issues/349 for ongoing
-   discussion of the Connection ID.
 
 
 
-Kuehlewind & Trammell   Expires September 9, 2017               [Page 4]
+Kuehlewind, et al.     Expires September 10, 2017               [Page 4]
 
 Internet-DraftManageability of the QUIC Transport Protocol    March 2017
 
+
+   section 6.3 of [I-D.ietf-quic-transport].  See also
+   https://github.com/quicwg/base-drafts/issues/349 for ongoing
+   discussion of the Connection ID.
 
 2.4.  Packet Numbers
 
@@ -270,17 +274,16 @@ Internet-DraftManageability of the QUIC Transport Protocol    March 2017
    1-RTT connection establishment, using a TLS handshake on stream 0, is
    detectable using heuristics similar to those used to detect TLS over
    TCP. 0-RTT connection establishment, however, provides no particular
-   heuristic for differentiation from random background traffic at this
-   time.
 
 
 
-
-
-Kuehlewind & Trammell   Expires September 9, 2017               [Page 5]
+Kuehlewind, et al.     Expires September 10, 2017               [Page 5]
 
 Internet-DraftManageability of the QUIC Transport Protocol    March 2017
 
+
+   heuristic for differentiation from random background traffic at this
+   time.
 
    Exposure of connection shutdown is currently under discussion; see
    https://github.com/quicwg/base-drafts/issues/353 and
@@ -327,17 +330,17 @@ Internet-DraftManageability of the QUIC Transport Protocol    March 2017
    For enterprises and network operators one of the biggest management
    challenges is dealing with Distributed Denial of Service (DDoS)
    attacks.  Some network operators offer Security as a Service (SaaS)
-   solutions that detect attacks by monitoring, analyzing and filtering
-   traffic.  These approaches generally utilize network flow data
-   [RFC7011].  If any flows pose a threat, usually they are routed to a
 
 
 
-Kuehlewind & Trammell   Expires September 9, 2017               [Page 6]
+Kuehlewind, et al.     Expires September 10, 2017               [Page 6]
 
 Internet-DraftManageability of the QUIC Transport Protocol    March 2017
 
 
+   solutions that detect attacks by monitoring, analyzing and filtering
+   traffic.  These approaches generally utilize network flow data
+   [RFC7011].  If any flows pose a threat, usually they are routed to a
    "scrubbing environment" where the traffic is filtered, allowing the
    remaining "good" traffic to continue to the customer environment.
 
@@ -383,17 +386,16 @@ Internet-DraftManageability of the QUIC Transport Protocol    March 2017
    given that establishing a new connection using 0-RTT support is cheap
    and fast.
 
-   QoS mechanisms in the network MAY also use the connection ID for
-   service differentiation as usually a change of connection ID is bind
 
 
 
-
-Kuehlewind & Trammell   Expires September 9, 2017               [Page 7]
+Kuehlewind, et al.     Expires September 10, 2017               [Page 7]
 
 Internet-DraftManageability of the QUIC Transport Protocol    March 2017
 
 
+   QoS mechanisms in the network MAY also use the connection ID for
+   service differentiation as usually a change of connection ID is bind
    to a change of address which anyway is likely to lead to a re-route
    on a different path with different network characteristics.
 
@@ -443,9 +445,7 @@ Internet-DraftManageability of the QUIC Transport Protocol    March 2017
 
 
 
-
-
-Kuehlewind & Trammell   Expires September 9, 2017               [Page 8]
+Kuehlewind, et al.     Expires September 10, 2017               [Page 8]
 
 Internet-DraftManageability of the QUIC Transport Protocol    March 2017
 
@@ -501,7 +501,7 @@ Internet-DraftManageability of the QUIC Transport Protocol    March 2017
 
 
 
-Kuehlewind & Trammell   Expires September 9, 2017               [Page 9]
+Kuehlewind, et al.     Expires September 10, 2017               [Page 9]
 
 Internet-DraftManageability of the QUIC Transport Protocol    March 2017
 
@@ -532,6 +532,10 @@ Authors' Addresses
    Email: ietf@trammell.ch
 
 
+   Dan Druta
+   AT&T
+
+   Email: dd5826@att.com
 
 
 
@@ -553,8 +557,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-Kuehlewind & Trammell   Expires September 9, 2017              [Page 10]
+Kuehlewind, et al.     Expires September 10, 2017              [Page 10]

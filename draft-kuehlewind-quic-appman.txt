@@ -5,7 +5,7 @@
 Network Working Group                                      M. Kuehlewind
 Internet-Draft                                               B. Trammell
 Intended status: Informational                                ETH Zurich
-Expires: August 31, 2017                               February 27, 2017
+Expires: September 9, 2017                                March 08, 2017
 
 
       Applicability and Management of the QUIC Transport Protocol
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 31, 2017.
+   This Internet-Draft will expire on September 9, 2017.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Kuehlewind & Trammell    Expires August 31, 2017                [Page 1]
+Kuehlewind & Trammell   Expires September 9, 2017               [Page 1]
 
-Internet-DraftApplicability and Management of the QUIC TranFebruary 2017
+Internet-DraApplicability and Management of the QUIC Transpo  March 2017
 
 
 Table of Contents
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Kuehlewind & Trammell    Expires August 31, 2017                [Page 2]
+Kuehlewind & Trammell   Expires September 9, 2017               [Page 2]
 
-Internet-DraftApplicability and Management of the QUIC TranFebruary 2017
+Internet-DraApplicability and Management of the QUIC Transpo  March 2017
 
 
    an end-to-end transport protocol, all information in the protocol
@@ -165,9 +165,9 @@ Internet-DraftApplicability and Management of the QUIC TranFebruary 2017
 
 
 
-Kuehlewind & Trammell    Expires August 31, 2017                [Page 3]
+Kuehlewind & Trammell   Expires September 9, 2017               [Page 3]
 
-Internet-DraftApplicability and Management of the QUIC TranFebruary 2017
+Internet-DraApplicability and Management of the QUIC Transpo  March 2017
 
 
    and there stream multiplex would need to be implemented in the
@@ -221,9 +221,9 @@ Internet-DraftApplicability and Management of the QUIC TranFebruary 2017
 
 
 
-Kuehlewind & Trammell    Expires August 31, 2017                [Page 4]
+Kuehlewind & Trammell   Expires September 9, 2017               [Page 4]
 
-Internet-DraftApplicability and Management of the QUIC TranFebruary 2017
+Internet-DraApplicability and Management of the QUIC Transpo  March 2017
 
 
    successfully established to provide the respective credentials), the
@@ -277,9 +277,9 @@ Internet-DraftApplicability and Management of the QUIC TranFebruary 2017
 
 
 
-Kuehlewind & Trammell    Expires August 31, 2017                [Page 5]
+Kuehlewind & Trammell   Expires September 9, 2017               [Page 5]
 
-Internet-DraftApplicability and Management of the QUIC TranFebruary 2017
+Internet-DraApplicability and Management of the QUIC Transpo  March 2017
 
 
    o  connection ID: The connection ID is present if the connection ID
@@ -333,9 +333,9 @@ Internet-DraftApplicability and Management of the QUIC TranFebruary 2017
 
 
 
-Kuehlewind & Trammell    Expires August 31, 2017                [Page 6]
+Kuehlewind & Trammell   Expires September 9, 2017               [Page 6]
 
-Internet-DraftApplicability and Management of the QUIC TranFebruary 2017
+Internet-DraApplicability and Management of the QUIC Transpo  March 2017
 
 
 4.5.  Stateful Treatment of QUIC Traffic
@@ -389,9 +389,9 @@ Internet-DraftApplicability and Management of the QUIC TranFebruary 2017
 
 
 
-Kuehlewind & Trammell    Expires August 31, 2017                [Page 7]
+Kuehlewind & Trammell   Expires September 9, 2017               [Page 7]
 
-Internet-DraftApplicability and Management of the QUIC TranFebruary 2017
+Internet-DraApplicability and Management of the QUIC Transpo  March 2017
 
 
 7.  Acknowledgments
@@ -445,9 +445,9 @@ Internet-DraftApplicability and Management of the QUIC TranFebruary 2017
 
 
 
-Kuehlewind & Trammell    Expires August 31, 2017                [Page 8]
+Kuehlewind & Trammell   Expires September 9, 2017               [Page 8]
 
-Internet-DraftApplicability and Management of the QUIC TranFebruary 2017
+Internet-DraApplicability and Management of the QUIC Transpo  March 2017
 
 
    [Trammell16]
@@ -501,4 +501,4 @@ Authors' Addresses
 
 
 
-Kuehlewind & Trammell    Expires August 31, 2017                [Page 9]
+Kuehlewind & Trammell   Expires September 9, 2017               [Page 9]
