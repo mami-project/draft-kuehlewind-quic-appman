@@ -273,7 +273,7 @@ address {
   .github-fork-ribbon-wrapper {
     position: fixed;
   }
-/*]]>*/</style>
+  /*]]>*/</style>
 
 
   <link href="#rfc.toc" rel="Contents"/>
@@ -299,8 +299,8 @@ address {
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Kuehlewind, M. and B. Trammell" />
-  <meta name="dct.identifier" content="urn:ietf:id:draft-kuehlewind-quic-applicability-00" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-3-08" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-kuehlewind-quic-applicability-01" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-6-02" />
   <meta name="dct.abstract" content="This document discusses the applicability of the QUIC transport protocol, focusing on caveats impacting application protocol development and deployment over QUIC. Its intended audience is designers of application protocol mappings to QUIC, and implementors of these application protocols." />
   <meta name="description" content="This document discusses the applicability of the QUIC transport protocol, focusing on caveats impacting application protocol development and deployment over QUIC. Its intended audience is designers of application protocol mappings to QUIC, and implementors of these application protocols." />
 
@@ -324,8 +324,8 @@ address {
   <td class="right">ETH Zurich</td>
 </tr>
 <tr>
-  <td class="left">Expires: September 9, 2017</td>
-  <td class="right">March 08, 2017</td>
+  <td class="left">Expires: December 4, 2017</td>
+  <td class="right">June 02, 2017</td>
 </tr>
 
     	
@@ -333,7 +333,7 @@ address {
   </table>
 
   <p class="title">Applicability of the QUIC Transport Protocol<br />
-  <span class="filename">draft-kuehlewind-quic-applicability-00</span></p>
+  <span class="filename">draft-kuehlewind-quic-applicability-01</span></p>
   
   <h1 id="rfc.abstract">
   <a href="#rfc.abstract">Abstract</a>
@@ -345,7 +345,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on September 9, 2017.</p>
+<p>This Internet-Draft will expire on December 4, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -402,6 +402,7 @@ address {
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#information-exposure-and-the-connection-id" id="information-exposure-and-the-connection-id">Information exposure and the Connection ID</a></h1>
 <p id="rfc.section.7.p.1">QUIC exposed some information to the network in the unencrypted part of the header. This is either because there is no encryption context established yet or because this information is intended to be consumed by the network. Some of these information can be optionally exposed (still under discussion). Given that exposing these information can have privacy implications, an application may indicate to not support exposure of certain information.</p>
 <p id="rfc.section.7.p.2">In case of the connection ID this can be the case if the application has additional information that the client is not behind a NAT and the server is not behind a load balancer, and therefore it is unlikely that the addresses will be re-binded.</p>
+<p id="rfc.section.7.p.3">[EDITOR&#8217;S NOTE: per https://github.com/quicwg/base-drafts/issues/514 potentially expand this with guidance on server connection ID selection.]</p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#use-of-versions-and-cryptographic-handshake" id="use-of-versions-and-cryptographic-handshake">Use of Versions and Cryptographic Handshake</a></h1>
 <p id="rfc.section.8.p.1">Versioning in QUIC may change the whole protocol behavior, beside some header fields that have been declared to be fixed. As such a new or higher version of QUIC does not necessarily provide a better service but just a very different service, an application needs to be able to select which versions of QUIC it wants to use.</p>
 <p id="rfc.section.8.p.2">The use of a different encryption scheme than TLS1.3 or higher needs a new version of QUIC.  <a href="#I-D.ietf-quic-transport">[I-D.ietf-quic-transport]</a> specifies requirements for the cryptographic handshake as currently realized by TLS1.3 and described in a separate specification <a href="#I-D.ietf-quic-tls">[I-D.ietf-quic-tls]</a>. This split is performed to enable light-weight versioning with different cryptographic handshakes.</p>
@@ -420,13 +421,13 @@ address {
       <td class="reference">
         <b id="I-D.ietf-quic-tls">[I-D.ietf-quic-tls]</b>
       </td>
-      <td class="top"><a>Thomson, M.</a> and <a>S. Turner</a>, "<a href="http://tools.ietf.org/html/draft-ietf-quic-tls-01">Using Transport Layer Security (TLS) to Secure QUIC</a>", Internet-Draft draft-ietf-quic-tls-01, January 2017.</td>
+      <td class="top"><a>Thomson, M.</a> and <a>S. Turner</a>, "<a href="http://tools.ietf.org/html/draft-ietf-quic-tls-03">Using Transport Layer Security (TLS) to Secure QUIC</a>", Internet-Draft draft-ietf-quic-tls-03, May 2017.</td>
     </tr>
     <tr>
       <td class="reference">
         <b id="I-D.ietf-quic-transport">[I-D.ietf-quic-transport]</b>
       </td>
-      <td class="top"><a>Iyengar, J.</a> and <a>M. Thomson</a>, "<a href="http://tools.ietf.org/html/draft-ietf-quic-transport-01">QUIC: A UDP-Based Multiplexed and Secure Transport</a>", Internet-Draft draft-ietf-quic-transport-01, January 2017.</td>
+      <td class="top"><a>Iyengar, J.</a> and <a>M. Thomson</a>, "<a href="http://tools.ietf.org/html/draft-ietf-quic-transport-03">QUIC: A UDP-Based Multiplexed and Secure Transport</a>", Internet-Draft draft-ietf-quic-transport-03, May 2017.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -455,7 +456,7 @@ address {
       <td class="reference">
         <b id="I-D.ietf-quic-http">[I-D.ietf-quic-http]</b>
       </td>
-      <td class="top"><a>Bishop, M.</a>, "<a href="http://tools.ietf.org/html/draft-ietf-quic-http-01">Hypertext Transfer Protocol (HTTP) over QUIC</a>", Internet-Draft draft-ietf-quic-http-01, January 2017.</td>
+      <td class="top"><a>Bishop, M.</a>, "<a href="http://tools.ietf.org/html/draft-ietf-quic-http-03">Hypertext Transfer Protocol (HTTP) over QUIC</a>", Internet-Draft draft-ietf-quic-http-03, May 2017.</td>
     </tr>
     <tr>
       <td class="reference">
