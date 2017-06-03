@@ -5,9 +5,9 @@
 Network Working Group                                      M. Kuehlewind
 Internet-Draft                                               B. Trammell
 Intended status: Informational                                ETH Zurich
-Expires: December 4, 2017                                       D. Druta
+Expires: December 5, 2017                                       D. Druta
                                                                     AT&T
-                                                           June 02, 2017
+                                                           June 03, 2017
 
 
               Manageability of the QUIC Transport Protocol
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 4, 2017.
+   This Internet-Draft will expire on December 5, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Kuehlewind, et al.      Expires December 4, 2017                [Page 1]
+Kuehlewind, et al.      Expires December 5, 2017                [Page 1]
 
 Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
@@ -71,20 +71,20 @@ Table of Contents
      2.3.  Connection ID and Rebinding . . . . . . . . . . . . . . .   5
      2.4.  Packet Numbers  . . . . . . . . . . . . . . . . . . . . .   5
      2.5.  Initial Handshake and PMTUD . . . . . . . . . . . . . . .   6
-     2.6.  Greasing  . . . . . . . . . . . . . . . . . . . . . . . .   6
+     2.6.  Version Negotiation and Greasing  . . . . . . . . . . . .   6
    3.  Specific Network Management Tasks . . . . . . . . . . . . . .   6
      3.1.  Stateful Treatment of QUIC Traffic  . . . . . . . . . . .   6
-     3.2.  Measurement of QUIC Traffic . . . . . . . . . . . . . . .   6
-     3.3.  DDoS Detection and Mitigation . . . . . . . . . . . . . .   7
+     3.2.  Measurement of QUIC Traffic . . . . . . . . . . . . . . .   7
+     3.3.  DDoS Detection and Mitigation . . . . . . . . . . . . . .   8
      3.4.  QoS support and ECMP  . . . . . . . . . . . . . . . . . .   8
-     3.5.  Load balancing  . . . . . . . . . . . . . . . . . . . . .   8
+     3.5.  Load balancing  . . . . . . . . . . . . . . . . . . . . .   9
    4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
    5.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
    6.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   9
-   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
-     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   9
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  10
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .  10
      7.2.  Informative References  . . . . . . . . . . . . . . . . .  10
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Kuehlewind, et al.      Expires December 4, 2017                [Page 2]
+Kuehlewind, et al.      Expires December 5, 2017                [Page 2]
 
 Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
@@ -165,7 +165,7 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
 
 
-Kuehlewind, et al.      Expires December 4, 2017                [Page 3]
+Kuehlewind, et al.      Expires December 5, 2017                [Page 3]
 
 Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
@@ -221,7 +221,7 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
 
 
-Kuehlewind, et al.      Expires December 4, 2017                [Page 4]
+Kuehlewind, et al.      Expires December 5, 2017                [Page 4]
 
 Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
@@ -253,12 +253,12 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
    together; and to allow rebinding of a connection after one of the
    endpoint's addresses changes - usually the client's, in the case of
    the HTTP binding.  The connection ID is proposed by the server during
-   connection establishment.  A flow might change one of its IP
-   addresses but keep the same connection ID, as noted in Section 2.1,
-   and the connection ID may change during a connection as well; see
-   section 6.3 of [I-D.ietf-quic-transport].  See also
-   https://github.com/quicwg/base-drafts/issues/349 for ongoing
-   discussion of the Connection ID.
+   connection establishment, and a server might provide additional
+   connection IDs that can the used by the client at any time during the
+   connection.  Therefore if a flow changes one of its IP addresses it
+   may keep the same connection ID, or the connection ID may also change
+   together with the IP address migration, avoiding linkability; see
+   section 7.6 of [I-D.ietf-quic-transport].
 
 2.4.  Packet Numbers
 
@@ -272,12 +272,12 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
    packet, including those containing only acknowledgment or other
    control information.  Indeed, whether a packet contains user data or
    only control information is intentionally left unexposed to the
-   network.
+   network.  The packet number increases with every packet but they
+   sender may skip packet numbers.
 
 
 
-
-Kuehlewind, et al.      Expires December 4, 2017                [Page 5]
+Kuehlewind, et al.      Expires December 5, 2017                [Page 5]
 
 Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
@@ -291,10 +291,24 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
    [Editor's note: text needed.]
 
-2.6.  Greasing
+2.6.  Version Negotiation and Greasing
 
-   [Editor's note: say something about greasing if added to the
-   transport draft]
+   Version negotiation is not protected, given the used protection
+   mechanism can change with the version.  However, the choices provided
+   in the list of version in the Version Negotiation packet will be
+   validated as soon as the cryptographic context has been established.
+   Therefore any manipulation of this list will be detected and will
+   cause the endpoints to terminate the connection.
+
+   Also note that the list of versions in the Version Negotiation packet
+   may contain reserved versions.  This mechanism is used to avoid
+   ossification in the implementation on the selection mechanism.
+   Further, a client may send a Initial Client packet with a reserved
+   version number to trigger version negotiation.  In the Version
+   Negotiation packet the connection ID and packet number of the Client
+   Initial packet are reflected to provide a proof of return-
+   routability.  Therefore changing these information will also cause
+   the connection to fail.
 
 3.  Specific Network Management Tasks
 
@@ -316,6 +330,14 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
    Both, 1-RTT and O-RTT connection establishment, using a TLS handshake
    on stream 0, is detectable using heuristics similar to those used to
    detect TLS over TCP. 0-RTT connection may additional also send data
+
+
+
+Kuehlewind, et al.      Expires December 5, 2017                [Page 6]
+
+Internet-DraftManageability of the QUIC Transport Protocol     June 2017
+
+
    packets, right after the client hello.  These data may be reorder in
    the network, therefore it may be possible that 0-RTT Protected data
    packet are seen before the Client Initial packet.
@@ -331,43 +353,46 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
    performance monitoring without requiring the generation of active
    measurement traffic.
 
-
-
-Kuehlewind, et al.      Expires December 4, 2017                [Page 6]
-
-Internet-DraftManageability of the QUIC Transport Protocol     June 2017
-
-
-   The presence of packet numbers on most QUIC packets allows the
-   trivial one-sided estimation of packet loss and reordering between
-   the sender and a given observation point.  However, since
-   retransmissions are not identifiable as such, loss between an
-   observation point and the receiver cannot be reliably estimated.
+   The presence of packet numbers on all QUIC packets allows the trivial
+   one-sided estimation of packet loss and reordering between the sender
+   and a given observation point.  However, since retransmissions are
+   not identifiable as such, loss between an observation point and the
+   receiver cannot be reliably estimated.
 
    The lack of any acknowledgement information or timestamping
    information in the QUIC packet header makes running passive
    estimation of latency via round trip time (RTT) impossible.  RTT can
    only be measured at connection establishment time, by observing the
-   Initial Client packet and the Server's reply to this packet which
+   Client Initial packet and the Server's reply to this packet which
    maybe a Server Cleartext, Version Negotiation, or Server Stateless
    Retry packet.
 
-   Note that adding packet number echo (as in https://github.com/quicwg/
-   base-drafts/pull/367 or https://github.com/quicwg/base-drafts/
-   pull/368) to the public header would allow passive RTT measurement at
-   on-path observation points.  For efficiency purposes, this packet
-   number echo need not be carried on every packet, and could be made
-   optional, allowing endpoints to make a measurability/efficiency
-   tradeoff; see section 4 of [IPIM].  Note further that this facility
-   would have significantly better measurability characteristics than
-   sequence-acknowledgement-based RTT measurement currently available in
-   TCP on typical asymmetric flows, as adequate samples will be
-   available in both directions, and packet number echo would be
-   decoupled from the underlying acknowledgment machinery; see e.g.
-   [Ding2015]
+   Note that adding a packet number echo (as in
+   https://github.com/quicwg/base-drafts/pull/367 or
+   https://github.com/quicwg/base-drafts/pull/368) to the public header
+   would allow passive RTT measurement at on-path observation points.
+   For efficiency purposes, this packet number echo need not be carried
+   on every packet, and could be made optional, allowing endpoints to
+   make a measurability/efficiency tradeoff; see section 4 of [IPIM].
+   Note further that this facility would have significantly better
+   measurability characteristics than sequence-acknowledgement-based RTT
+   measurement currently available in TCP on typical asymmetric flows,
+   as adequate samples will be available in both directions, and packet
+   number echo would be decoupled from the underlying acknowledgment
+   machinery; see e.g.  [Ding2015]
 
    Note in-network devices can inspect and correlate connection IDs for
    partial tracking of mobility events.
+
+
+
+
+
+
+Kuehlewind, et al.      Expires December 5, 2017                [Page 7]
+
+Internet-DraftManageability of the QUIC Transport Protocol     June 2017
+
 
 3.3.  DDoS Detection and Mitigation
 
@@ -386,14 +411,6 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
    DoS traffic.  The QUIC packet header currently does not support an
    explicit mechanism to easily distinguish legitimate QUIC traffic from
    other UDP traffic.  However, the first packet in a QUIC connection
-
-
-
-Kuehlewind, et al.      Expires December 4, 2017                [Page 7]
-
-Internet-DraftManageability of the QUIC Transport Protocol     June 2017
-
-
    will usually be a Client Initial packet.  This can be used to
    identify the first packet of the connection.
 
@@ -425,6 +442,14 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
    given that establishing a new connection using 0-RTT support is cheap
    and fast.
 
+
+
+
+Kuehlewind, et al.      Expires December 5, 2017                [Page 8]
+
+Internet-DraftManageability of the QUIC Transport Protocol     June 2017
+
+
    QoS mechanisms in the network MAY also use the connection ID for
    service differentiation as usually a change of connection ID is bind
    to a change of address which anyway is likely to lead to a re-route
@@ -441,14 +466,6 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
    [Editor's note: explain how this works as soon as we have decided who
    chooses the connection ID and when to set it.  Related to
    https://github.com/quicwg/base-drafts/issues/349]
-
-
-
-
-Kuehlewind, et al.      Expires December 4, 2017                [Page 8]
-
-Internet-DraftManageability of the QUIC Transport Protocol     June 2017
-
 
 4.  IANA Considerations
 
@@ -481,6 +498,14 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
    for Education, Research, and Innovation under contract no. 15.0268.
    This support does not imply endorsement.
 
+
+
+
+Kuehlewind, et al.      Expires December 5, 2017                [Page 9]
+
+Internet-DraftManageability of the QUIC Transport Protocol     June 2017
+
+
 7.  References
 
 7.1.  Normative References
@@ -495,17 +520,6 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
               and Secure Transport", draft-ietf-quic-transport-03 (work
               in progress), May 2017.
 
-
-
-
-
-
-
-Kuehlewind, et al.      Expires December 4, 2017                [Page 9]
-
-Internet-DraftManageability of the QUIC Transport Protocol     June 2017
-
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
@@ -518,10 +532,6 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
               and Timestamps - Findings and Impliciations for Passive
               RTT Measurement (ACM Computer Communication Review)", July
               2015.
-
-   [draft-kuehlewind-quic-applicability]
-              Kuehlewind, M. and B. Trammell, "Applicability of the QUIC
-              Transport Protocol", March 2017.
 
    [I-D.ietf-quic-http]
               Bishop, M., "Hypertext Transfer Protocol (HTTP) over
@@ -544,6 +554,14 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
               RFC 7011, DOI 10.17487/RFC7011, September 2013,
               <http://www.rfc-editor.org/info/rfc7011>.
 
+
+
+
+Kuehlewind, et al.      Expires December 5, 2017               [Page 10]
+
+Internet-DraftManageability of the QUIC Transport Protocol     June 2017
+
+
 Authors' Addresses
 
    Mirja Kuehlewind
@@ -553,13 +571,6 @@ Authors' Addresses
    Switzerland
 
    Email: mirja.kuehlewind@tik.ee.ethz.ch
-
-
-
-
-Kuehlewind, et al.      Expires December 4, 2017               [Page 10]
-
-Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
 
    Brian Trammell
@@ -602,15 +613,4 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-Kuehlewind, et al.      Expires December 4, 2017               [Page 11]
+Kuehlewind, et al.      Expires December 5, 2017               [Page 11]
