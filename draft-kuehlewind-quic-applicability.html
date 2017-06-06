@@ -285,14 +285,16 @@ address {
 <link href="#rfc.section.5" rel="Chapter" title="5 Prioritization"/>
 <link href="#rfc.section.6" rel="Chapter" title="6 Graceful connection closure"/>
 <link href="#rfc.section.7" rel="Chapter" title="7 Information exposure and the Connection ID"/>
+<link href="#rfc.section.7.1" rel="Chapter" title="7.1 Server-Generated Connection ID"/>
 <link href="#rfc.section.8" rel="Chapter" title="8 Using Server Retry for Redirection"/>
 <link href="#rfc.section.9" rel="Chapter" title="9 Use of Versions and Cryptographic Handshake"/>
 <link href="#rfc.section.10" rel="Chapter" title="10 IANA Considerations"/>
 <link href="#rfc.section.11" rel="Chapter" title="11 Security Considerations"/>
-<link href="#rfc.section.12" rel="Chapter" title="12 Acknowledgments"/>
-<link href="#rfc.references" rel="Chapter" title="13 References"/>
-<link href="#rfc.references.1" rel="Chapter" title="13.1 Normative References"/>
-<link href="#rfc.references.2" rel="Chapter" title="13.2 Informative References"/>
+<link href="#rfc.section.12" rel="Chapter" title="12 Contributors"/>
+<link href="#rfc.section.13" rel="Chapter" title="13 Acknowledgments"/>
+<link href="#rfc.references" rel="Chapter" title="14 References"/>
+<link href="#rfc.references.1" rel="Chapter" title="14.1 Normative References"/>
+<link href="#rfc.references.2" rel="Chapter" title="14.2 Informative References"/>
 <link href="#rfc.authors" rel="Chapter"/>
 
 
@@ -366,14 +368,16 @@ address {
 <li>5.   <a href="#rfc.section.5">Prioritization</a></li>
 <li>6.   <a href="#rfc.section.6">Graceful connection closure</a></li>
 <li>7.   <a href="#rfc.section.7">Information exposure and the Connection ID</a></li>
-<li>8.   <a href="#rfc.section.8">Using Server Retry for Redirection</a></li>
+<ul><li>7.1.   <a href="#rfc.section.7.1">Server-Generated Connection ID</a></li>
+</ul><li>8.   <a href="#rfc.section.8">Using Server Retry for Redirection</a></li>
 <li>9.   <a href="#rfc.section.9">Use of Versions and Cryptographic Handshake</a></li>
 <li>10.   <a href="#rfc.section.10">IANA Considerations</a></li>
 <li>11.   <a href="#rfc.section.11">Security Considerations</a></li>
-<li>12.   <a href="#rfc.section.12">Acknowledgments</a></li>
-<li>13.   <a href="#rfc.references">References</a></li>
-<ul><li>13.1.   <a href="#rfc.references.1">Normative References</a></li>
-<li>13.2.   <a href="#rfc.references.2">Informative References</a></li>
+<li>12.   <a href="#rfc.section.12">Contributors</a></li>
+<li>13.   <a href="#rfc.section.13">Acknowledgments</a></li>
+<li>14.   <a href="#rfc.references">References</a></li>
+<ul><li>14.1.   <a href="#rfc.references.1">Normative References</a></li>
+<li>14.2.   <a href="#rfc.references.2">Informative References</a></li>
 </ul><li><a href="#rfc.authors">Authors' Addresses</a></li>
 
 
@@ -401,10 +405,16 @@ address {
 <p id="rfc.section.5.p.2">Priority handling of retransmissions may be implemented by the sender in the transport layer and <a href="#I-D.ietf-quic-transport">[I-D.ietf-quic-transport]</a> does not specify a specific way how this must be handled. Currently QUIC only provides fully reliable stream transmission, and as such prioritization of retransmission is likely beneficial. For not fully reliable streams priority scheduling of retransmissions over data of higher-priority streams might not be desired. In this case QUIC could also provide an interface or derive the prioritization decision from the reliability level of the stream.</p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#graceful-connection-closure" id="graceful-connection-closure">Graceful connection closure</a></h1>
 <p id="rfc.section.6.p.1">[EDITOR&#8217;S NOTE: give some guidance here about the steps an application should take; however this is still work in progress]</p>
-<h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#information-exposure-and-the-connection-id" id="information-exposure-and-the-connection-id">Information exposure and the Connection ID</a></h1>
-<p id="rfc.section.7.p.1">QUIC exposes some information to the network in the unencrypted part of the header, either before the encryption context is established, because the information is intended to be used by the network. QUIC has a long header that is used during connection establishment and for other control processes, and a short header that may be used for data transmission in an established connection. While the long header is fixed and exposes some information, the short header only exposes the packet number by default and may optionally expose a connection ID. Given that exposing this information can have privacy implications, an application may indicate to not support exposure of certain information.</p>
-<p id="rfc.section.7.p.2">As the connection ID is optional on the short header, an application that has additional information that the client is not behind a NAT and the server is not behind a load balancer, and therefore it is unlikely that the addresses will be re-bound, may indicate to the transport that is wishes to not expose a connection ID.</p>
-<p id="rfc.section.7.p.3">Also see https://github.com/quicwg/base-drafts/issues/514 for guidance on server connection ID selection.</p>
+<h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#connid" id="connid">Information exposure and the Connection ID</a></h1>
+<p id="rfc.section.7.p.1">QUIC exposes some information to the network in the unencrypted part of the header, either before the encryption context is established, because the information is intended to be used by the network. QUIC has a long header that is used during connection establishment and for other control processes, and a short header that may be used for data transmission in an established connection. While the long header is fixed and exposes some information, the short header only exposes the packet number by default and may optionally expose a connection ID.</p>
+<p id="rfc.section.7.p.2">Given that exposing this information may make it possible to associate multiple addresses with a single client during rebinding, which has privacy implications, an application may indicate to not support exposure of certain information after the handshake. Specificially, an application that has additional information that the client is not behind a NAT and the server is not behind a load balancer, and therefore it is unlikely that the addresses will be re-bound, may indicate to the transport that is wishes to not expose a connection ID.</p>
+<h1 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#server-generated-connection-id" id="server-generated-connection-id">Server-Generated Connection ID</a></h1>
+<p id="rfc.section.7.1.p.1">The Connection ID is used in part to support load balancing in content distribution networks (CDNs), which operate complexm geographically distributed pools of back-end servers, fronted by load balancing systems.  These load balancers are responsible for identifying the most appropriate server for each connection and for routing all packets belonging to that connection to the chosen server.</p>
+<p id="rfc.section.7.1.p.2">Load balancers are often deployed in pools for redundancy and load sharing. For high availability, it is important that when packets belonging to a flow start to arrive at a different load balancer in the load balancer pool, the packets continue to be forwarded to the original server in the server pool.</p>
+<p id="rfc.section.7.1.p.3">Support for seamless connection migration is an important design goal of QUIC &#8211; a necessity due to the proliferation of mobile connected devices. This connection persistence provides an additional challenge for multi-homed anycast-based services often employed by large content owners and CDNs. The challenge is that a migration to a different network in the middle of the connection greatly increases the chances of the packets routed to a different anycast point of presence (POP) due to the new network&#8217;s different connectivity and Internet peering arrangements. The load balancer in the new POP, potentially thousands of miles away, will not have information about the established flow and would not be able to route it back to the original POP.</p>
+<p id="rfc.section.7.1.p.4">Since a client-generated Connection ID would require state migration in the CDN, QUIC supports a server-generated Connection ID, transmitted to the client during connection establishment. This Connection ID may encode the identity of the server or information about its load balancing pool, in order to support stateless load balancing. Once the server generates a Connection ID that encodes its identity, every CDN load balancer would be able to forward the packets to that server without needing information about every specific flow it is forwarding.</p>
+<p id="rfc.section.7.1.p.5">Server-generated Connection IDs must not encode any information other that that needed to route packets to the appropriate backend server(s):  typically the identity of the backend server or pool of servers, if the data-center&#8217;s load balancing system keeps &#8220;local&#8221; state of all flows itself.  Care must be exercised to ensure that the information encoded in the Connection ID is not sufficient to identify unique end users.</p>
+<p id="rfc.section.7.1.p.6">By encoding routing information in the Connection ID, the load balancing systems open up a new attack vector that allows bad actors to direct traffic at a specific backend server (or backend server pool).  It is recommended that Server-Generated Connection ID includes a cryptographic MAC that the load balancer pool server are able to identify and discard packets featuring an invalid MAC.</p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#using-server-retry-for-redirection" id="using-server-retry-for-redirection">Using Server Retry for Redirection</a></h1>
 <p id="rfc.section.8.p.1">QUIC provide a Server Retry packet that can be send by a server in response to the Client Initial packet. The server may choose a new connection ID in that packet and the client will retry by sending another Client Initial packet with the server-selected connection ID. This mechanism can be used to redirect a connection to a different server, e.g. due to performance reasons or when servers in a server pool are upgraded gradually, and therefore may support different versions of QUIC. In this case, it is assumed that all servers belonging to a certain pool are served in cooperation with load balancers that forward the traffic based on the connection ID. A server can chose the connection ID in the Server Retry packet such that the load balancer will redirect the next Client Initial packet to a different server in that pool.</p>
 <h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#use-of-versions-and-cryptographic-handshake" id="use-of-versions-and-cryptographic-handshake">Use of Versions and Cryptographic Handshake</a></h1>
@@ -415,10 +425,12 @@ address {
 <h1 id="rfc.section.11"><a href="#rfc.section.11">11.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a></h1>
 <p id="rfc.section.11.p.1">See the security considerations in <a href="#I-D.ietf-quic-transport">[I-D.ietf-quic-transport]</a> and <a href="#I-D.ietf-quic-tls">[I-D.ietf-quic-tls]</a>; the security considerations for the underlying transport protocol are relevant for applications using QUIC, as well.</p>
 <p id="rfc.section.11.p.2">Application developers should note that any fallback they use when QUIC cannot be used due to network blocking of UDP SHOULD guarantee the same security properties as QUIC; if this is not possible, the connection SHOULD fail to allow the application to explicitly handle fallback to a less-secure alternative. See <a href="#fallback">Section 2</a>.</p>
-<h1 id="rfc.section.12"><a href="#rfc.section.12">12.</a> <a href="#acknowledgments" id="acknowledgments">Acknowledgments</a></h1>
-<p id="rfc.section.12.p.1">This work is partially supported by the European Commission under Horizon 2020 grant agreement no. 688421 Measurement and Architecture for a Middleboxed Internet (MAMI), and by the Swiss State Secretariat for Education, Research, and Innovation under contract no. 15.0268. This support does not imply endorsement.</p>
-<h1 id="rfc.references"><a href="#rfc.references">13.</a> References</h1>
-<h1 id="rfc.references.1"><a href="#rfc.references.1">13.1.</a> Normative References</h1>
+<h1 id="rfc.section.12"><a href="#rfc.section.12">12.</a> <a href="#contributors" id="contributors">Contributors</a></h1>
+<p id="rfc.section.12.p.1">Igor Lubashev contributed text to <a href="#connid">Section 7</a> on server-selected connection IDs.</p>
+<h1 id="rfc.section.13"><a href="#rfc.section.13">13.</a> <a href="#acknowledgments" id="acknowledgments">Acknowledgments</a></h1>
+<p id="rfc.section.13.p.1">This work is partially supported by the European Commission under Horizon 2020 grant agreement no. 688421 Measurement and Architecture for a Middleboxed Internet (MAMI), and by the Swiss State Secretariat for Education, Research, and Innovation under contract no. 15.0268. This support does not imply endorsement.</p>
+<h1 id="rfc.references"><a href="#rfc.references">14.</a> References</h1>
+<h1 id="rfc.references.1"><a href="#rfc.references.1">14.1.</a> Normative References</h1>
 <table>
   <tbody>
     <tr>
@@ -441,7 +453,7 @@ address {
     </tr>
   </tbody>
 </table>
-<h1 id="rfc.references.2"><a href="#rfc.references.2">13.2.</a> Informative References</h1>
+<h1 id="rfc.references.2"><a href="#rfc.references.2">14.2.</a> Informative References</h1>
 <table>
   <tbody>
     <tr>

@@ -61,22 +61,24 @@ Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-     1.1.  Notational Conventions  . . . . . . . . . . . . . . . . .   2
+     1.1.  Notational Conventions  . . . . . . . . . . . . . . . . .   3
    2.  The Necessity of Fallback . . . . . . . . . . . . . . . . . .   3
    3.  Zero RTT: Here There Be Dragons . . . . . . . . . . . . . . .   3
    4.  Stream versus Flow Multiplexing . . . . . . . . . . . . . . .   4
    5.  Prioritization  . . . . . . . . . . . . . . . . . . . . . . .   4
-   6.  Graceful connection closure . . . . . . . . . . . . . . . . .   4
+   6.  Graceful connection closure . . . . . . . . . . . . . . . . .   5
    7.  Information exposure and the Connection ID  . . . . . . . . .   5
-   8.  Using Server Retry for Redirection  . . . . . . . . . . . . .   5
-   9.  Use of Versions and Cryptographic Handshake . . . . . . . . .   5
-   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
-   11. Security Considerations . . . . . . . . . . . . . . . . . . .   6
-   12. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   6
-   13. References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
-     13.1.  Normative References . . . . . . . . . . . . . . . . . .   6
-     13.2.  Informative References . . . . . . . . . . . . . . . . .   7
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
+     7.1.  Server-Generated Connection ID  . . . . . . . . . . . . .   5
+   8.  Using Server Retry for Redirection  . . . . . . . . . . . . .   6
+   9.  Use of Versions and Cryptographic Handshake . . . . . . . . .   7
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
+   11. Security Considerations . . . . . . . . . . . . . . . . . . .   7
+   12. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .   7
+   13. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   7
+   14. References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     14.1.  Normative References . . . . . . . . . . . . . . . . . .   8
+     14.2.  Informative References . . . . . . . . . . . . . . . . .   8
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
 
@@ -100,11 +102,9 @@ Table of Contents
    applicability, and issues that application developers must consider
    when using QUIC as a transport for their application.
 
-1.1.  Notational Conventions
 
-   The words "MUST", "MUST NOT", "SHOULD", and "MAY" are used in this
-   document.  It's not shouting; when these words are capitalized, they
-   have a special meaning as defined in [RFC2119].
+
+
 
 
 
@@ -113,6 +113,12 @@ Kuehlewind & Trammell   Expires December 8, 2017                [Page 2]
 
 Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
 
+
+1.1.  Notational Conventions
+
+   The words "MUST", "MUST NOT", "SHOULD", and "MAY" are used in this
+   document.  It's not shouting; when these words are capitalized, they
+   have a special meaning as defined in [RFC2119].
 
 2.  The Necessity of Fallback
 
@@ -156,12 +162,6 @@ Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
    QUIC provides for 0-RTT connection establishment (see section 3.2 of
    [I-D.ietf-quic-transport]).  However, data in the frames contained in
    0-RTT packets of a such a connection must be treated specially by the
-   application layer.  Replay of these packets can cause the data to
-   processed twice.  This is further described in
-   [I-D.nottingham-httpbis-retry].
-
-   Applications that cannot treat data that may appear in a 0-RTT
-   connection establishment as idempotent MUST NOT use 0-RTT
 
 
 
@@ -170,6 +170,12 @@ Kuehlewind & Trammell   Expires December 8, 2017                [Page 3]
 Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
 
 
+   application layer.  Replay of these packets can cause the data to
+   processed twice.  This is further described in
+   [I-D.nottingham-httpbis-retry].
+
+   Applications that cannot treat data that may appear in a 0-RTT
+   connection establishment as idempotent MUST NOT use 0-RTT
    establishment.  For this reason the QUIC transport SHOULD provide an
    interface for the application to indicate if 0-RTT support is in
    general desired or a way to indicate if data is idempotent.
@@ -210,12 +216,6 @@ Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
    could also provide an interface or derive the prioritization decision
    from the reliability level of the stream.
 
-6.  Graceful connection closure
-
-   [EDITOR'S NOTE: give some guidance here about the steps an
-   application should take; however this is still work in progress]
-
-
 
 
 
@@ -225,6 +225,11 @@ Kuehlewind & Trammell   Expires December 8, 2017                [Page 4]
 
 Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
 
+
+6.  Graceful connection closure
+
+   [EDITOR'S NOTE: give some guidance here about the steps an
+   application should take; however this is still work in progress]
 
 7.  Information exposure and the Connection ID
 
@@ -236,18 +241,79 @@ Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
    data transmission in an established connection.  While the long
    header is fixed and exposes some information, the short header only
    exposes the packet number by default and may optionally expose a
-   connection ID.  Given that exposing this information can have privacy
-   implications, an application may indicate to not support exposure of
-   certain information.
+   connection ID.
 
-   As the connection ID is optional on the short header, an application
-   that has additional information that the client is not behind a NAT
-   and the server is not behind a load balancer, and therefore it is
-   unlikely that the addresses will be re-bound, may indicate to the
-   transport that is wishes to not expose a connection ID.
+   Given that exposing this information may make it possible to
+   associate multiple addresses with a single client during rebinding,
+   which has privacy implications, an application may indicate to not
+   support exposure of certain information after the handshake.
+   Specificially, an application that has additional information that
+   the client is not behind a NAT and the server is not behind a load
+   balancer, and therefore it is unlikely that the addresses will be re-
+   bound, may indicate to the transport that is wishes to not expose a
+   connection ID.
 
-   Also see https://github.com/quicwg/base-drafts/issues/514 for
-   guidance on server connection ID selection.
+7.1.  Server-Generated Connection ID
+
+   The Connection ID is used in part to support load balancing in
+   content distribution networks (CDNs), which operate complexm
+   geographically distributed pools of back-end servers, fronted by load
+   balancing systems.  These load balancers are responsible for
+   identifying the most appropriate server for each connection and for
+   routing all packets belonging to that connection to the chosen
+   server.
+
+   Load balancers are often deployed in pools for redundancy and load
+   sharing.  For high availability, it is important that when packets
+   belonging to a flow start to arrive at a different load balancer in
+   the load balancer pool, the packets continue to be forwarded to the
+   original server in the server pool.
+
+   Support for seamless connection migration is an important design goal
+   of QUIC - a necessity due to the proliferation of mobile connected
+   devices.  This connection persistence provides an additional
+   challenge for multi-homed anycast-based services often employed by
+   large content owners and CDNs.  The challenge is that a migration to
+
+
+
+Kuehlewind & Trammell   Expires December 8, 2017                [Page 5]
+
+Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
+
+
+   a different network in the middle of the connection greatly increases
+   the chances of the packets routed to a different anycast point of
+   presence (POP) due to the new network's different connectivity and
+   Internet peering arrangements.  The load balancer in the new POP,
+   potentially thousands of miles away, will not have information about
+   the established flow and would not be able to route it back to the
+   original POP.
+
+   Since a client-generated Connection ID would require state migration
+   in the CDN, QUIC supports a server-generated Connection ID,
+   transmitted to the client during connection establishment.  This
+   Connection ID may encode the identity of the server or information
+   about its load balancing pool, in order to support stateless load
+   balancing.  Once the server generates a Connection ID that encodes
+   its identity, every CDN load balancer would be able to forward the
+   packets to that server without needing information about every
+   specific flow it is forwarding.
+
+   Server-generated Connection IDs must not encode any information other
+   that that needed to route packets to the appropriate backend
+   server(s): typically the identity of the backend server or pool of
+   servers, if the data-center's load balancing system keeps "local"
+   state of all flows itself.  Care must be exercised to ensure that the
+   information encoded in the Connection ID is not sufficient to
+   identify unique end users.
+
+   By encoding routing information in the Connection ID, the load
+   balancing systems open up a new attack vector that allows bad actors
+   to direct traffic at a specific backend server (or backend server
+   pool).  It is recommended that Server-Generated Connection ID
+   includes a cryptographic MAC that the load balancer pool server are
+   able to identify and discard packets featuring an invalid MAC.
 
 8.  Using Server Retry for Redirection
 
@@ -265,6 +331,13 @@ Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
    that the load balancer will redirect the next Client Initial packet
    to a different server in that pool.
 
+
+
+Kuehlewind & Trammell   Expires December 8, 2017                [Page 6]
+
+Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
+
+
 9.  Use of Versions and Cryptographic Handshake
 
    Versioning in QUIC may change the the protocol's behavior completely,
@@ -273,14 +346,6 @@ Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
    does not necessarily provide a better service, but might simply
    provide a very different service, so an application needs to be able
    to select which versions of QUIC it wants to use.
-
-
-
-
-Kuehlewind & Trammell   Expires December 8, 2017                [Page 5]
-
-Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
-
 
    A new version could use an encryption scheme other than TLS 1.3 or
    higher.  [I-D.ietf-quic-transport] specifies requirements for the
@@ -305,7 +370,12 @@ Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
    connection SHOULD fail to allow the application to explicitly handle
    fallback to a less-secure alternative.  See Section 2.
 
-12.  Acknowledgments
+12.  Contributors
+
+   Igor Lubashev contributed text to Section 7 on server-selected
+   connection IDs.
+
+13.  Acknowledgments
 
    This work is partially supported by the European Commission under
    Horizon 2020 grant agreement no. 688421 Measurement and Architecture
@@ -313,9 +383,20 @@ Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
    for Education, Research, and Innovation under contract no. 15.0268.
    This support does not imply endorsement.
 
-13.  References
 
-13.1.  Normative References
+
+
+
+
+
+Kuehlewind & Trammell   Expires December 8, 2017                [Page 7]
+
+Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
+
+
+14.  References
+
+14.1.  Normative References
 
    [I-D.ietf-quic-tls]
               Thomson, M. and S. Turner, "Using Transport Layer Security
@@ -327,23 +408,12 @@ Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
               and Secure Transport", draft-ietf-quic-transport-03 (work
               in progress), May 2017.
 
-
-
-
-
-
-
-Kuehlewind & Trammell   Expires December 8, 2017                [Page 6]
-
-Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
-
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
 
-13.2.  Informative References
+14.2.  Informative References
 
    [Edeline16]
               Edeline, K., Kuehlewind, M., Trammell, B., Aben, E., and
@@ -372,6 +442,14 @@ Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
               Transparency Measurements using RIPE Atlas (RIPE72 MAT
               presentation)", May 2016.
 
+
+
+
+Kuehlewind & Trammell   Expires December 8, 2017                [Page 8]
+
+Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
+
+
 Authors' Addresses
 
    Mirja Kuehlewind
@@ -381,17 +459,6 @@ Authors' Addresses
    Switzerland
 
    Email: mirja.kuehlewind@tik.ee.ethz.ch
-
-
-
-
-
-
-
-
-Kuehlewind & Trammell   Expires December 8, 2017                [Page 7]
-
-Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
 
 
    Brian Trammell
@@ -434,15 +501,4 @@ Internet-DraftApplicability of the QUIC Transport Protocol     June 2017
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-Kuehlewind & Trammell   Expires December 8, 2017                [Page 8]
+Kuehlewind & Trammell   Expires December 8, 2017                [Page 9]
