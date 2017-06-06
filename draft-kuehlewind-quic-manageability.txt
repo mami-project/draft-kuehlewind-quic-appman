@@ -5,9 +5,9 @@
 Network Working Group                                      M. Kuehlewind
 Internet-Draft                                               B. Trammell
 Intended status: Informational                                ETH Zurich
-Expires: December 5, 2017                                       D. Druta
+Expires: December 8, 2017                                       D. Druta
                                                                     AT&T
-                                                           June 03, 2017
+                                                           June 06, 2017
 
 
               Manageability of the QUIC Transport Protocol
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 5, 2017.
+   This Internet-Draft will expire on December 8, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Kuehlewind, et al.      Expires December 5, 2017                [Page 1]
+Kuehlewind, et al.      Expires December 8, 2017                [Page 1]
 
 Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
@@ -77,14 +77,15 @@ Table of Contents
      3.2.  Measurement of QUIC Traffic . . . . . . . . . . . . . . .   7
      3.3.  DDoS Detection and Mitigation . . . . . . . . . . . . . .   8
      3.4.  QoS support and ECMP  . . . . . . . . . . . . . . . . . .   8
-     3.5.  Load balancing  . . . . . . . . . . . . . . . . . . . . .   9
-   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
-   6.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   9
-   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  10
-     7.1.  Normative References  . . . . . . . . . . . . . . . . . .  10
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .  10
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
+     3.5.  Load Balancing using the Connection ID  . . . . . . . . .   9
+   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
+   6.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  10
+   7.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  10
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  11
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  11
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .  11
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
 
 1.  Introduction
 
@@ -104,15 +105,17 @@ Table of Contents
    interpret and utilize information that is exposed by QUIC to the
    network as well as explaining requirement and assumptions that the
    QUIC protocol design takes toward the expected network treatment.  It
-   also discusses how common network management practices will be
-   impacted by QUIC.
 
 
 
-Kuehlewind, et al.      Expires December 5, 2017                [Page 2]
+
+Kuehlewind, et al.      Expires December 8, 2017                [Page 2]
 
 Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
+
+   also discusses how common network management practices will be
+   impacted by QUIC.
 
    Of course, network management is not a one-size-fits-all endeavour:
    practices considered necessary or even mandatory within enterprise
@@ -159,17 +162,17 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
    The first bit of the QUIC header indicates the present of a long
    header that exposes more information than the short header.  The long
    header is typically used during connection start or for other control
-   processes while the short header will be used on most data packets to
-   limited unnecessary header overhead.  The fields and location of
-   these fields as defined by the current version of QUIC for the long
 
 
 
-Kuehlewind, et al.      Expires December 5, 2017                [Page 3]
+Kuehlewind, et al.      Expires December 8, 2017                [Page 3]
 
 Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
 
+   processes while the short header will be used on most data packets to
+   limited unnecessary header overhead.  The fields and location of
+   these fields as defined by the current version of QUIC for the long
    header are fixed for all future version as well.  However, note that
    future versions of QUIC may provide additional fields.  In the
    current version of quic the long header for all header types has a
@@ -195,13 +198,13 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
       congestion ID itself as well as the Connection ID flag in the
       short header is fixed for all versions of QUIC.  The connection ID
       identifies the connection associated with a QUIC packet, for load-
-      balancing and NAT rebinding purposes; see Section 2.3.  Therefore
-      it is also expected that the Connection ID will either be present
-      on all packets of a flow or none of the short header packets.
-      However, this field is under endpoint control and there is
-      protocol mechanism that hinders the sending endpoint to revise its
-      decision about exposing the Connection ID at any time during the
-      connection.
+      balancing and NAT rebinding purposes; see Section 3.5 and
+      Section 2.3.  Therefore it is also expected that the Connection ID
+      will either be present on all packets of a flow or none of the
+      short header packets.  However, this field is under endpoint
+      control and there is protocol mechanism that hinders the sending
+      endpoint to revise its decision about exposing the Connection ID
+      at any time during the connection.
 
    o  packet number: Every packet has an associated packet number.  The
       packet number increases with each packet, and the least-
@@ -215,16 +218,17 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
       Version negotiation packet.  The version negotiation packet is
       fixed for all version of QUIC and contains a lit of versions that
       is supported by the sender.  However the version in the version
-      field of the header is the reflected version of the clients
-      initial packet and is therefore explicitly not supported by the
-      sender.
 
 
 
-Kuehlewind, et al.      Expires December 5, 2017                [Page 4]
+Kuehlewind, et al.      Expires December 8, 2017                [Page 4]
 
 Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
+
+      field of the header is the reflected version of the clients
+      initial packet and is therefore explicitly not supported by the
+      sender.
 
    o  key phase: The short header further has a Key Phase flag that is
       used by the endpoint identify the right key that was used to
@@ -270,17 +274,18 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
    Unlike TCP sequence numbers, this packet number increases with every
    packet, including those containing only acknowledgment or other
+
+
+
+Kuehlewind, et al.      Expires December 8, 2017                [Page 5]
+
+Internet-DraftManageability of the QUIC Transport Protocol     June 2017
+
+
    control information.  Indeed, whether a packet contains user data or
    only control information is intentionally left unexposed to the
    network.  The packet number increases with every packet but they
    sender may skip packet numbers.
-
-
-
-Kuehlewind, et al.      Expires December 5, 2017                [Page 5]
-
-Internet-DraftManageability of the QUIC Transport Protocol     June 2017
-
 
    While loss detection in QUIC is based on packet numbers, congestion
    control by default provides richer information than vanilla TCP does.
@@ -324,20 +329,21 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
    protocol.  Features already present in QUIC may be used for state
    maintenance in this model.  Here, there are two important goals:
    distinguishing valid QUIC connection establishment from other
+
+
+
+
+Kuehlewind, et al.      Expires December 8, 2017                [Page 6]
+
+Internet-DraftManageability of the QUIC Transport Protocol     June 2017
+
+
    traffic, in order to establish state; and determining the end of a
    QUIC connection, in order to tear that state down.
 
    Both, 1-RTT and O-RTT connection establishment, using a TLS handshake
    on stream 0, is detectable using heuristics similar to those used to
    detect TLS over TCP. 0-RTT connection may additional also send data
-
-
-
-Kuehlewind, et al.      Expires December 5, 2017                [Page 6]
-
-Internet-DraftManageability of the QUIC Transport Protocol     June 2017
-
-
    packets, right after the client hello.  These data may be reorder in
    the network, therefore it may be possible that 0-RTT Protected data
    packet are seen before the Client Initial packet.
@@ -381,18 +387,15 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
    number echo would be decoupled from the underlying acknowledgment
    machinery; see e.g.  [Ding2015]
 
-   Note in-network devices can inspect and correlate connection IDs for
-   partial tracking of mobility events.
 
 
-
-
-
-
-Kuehlewind, et al.      Expires December 5, 2017                [Page 7]
+Kuehlewind, et al.      Expires December 8, 2017                [Page 7]
 
 Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
+
+   Note in-network devices can inspect and correlate connection IDs for
+   partial tracking of mobility events.
 
 3.3.  DDoS Detection and Mitigation
 
@@ -439,16 +442,16 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
    QUIC connection require the same network treatment and are handled by
    the same congestion controller.  If differential network treatment is
    desired, multiple QUIC connection to the same server might be used,
-   given that establishing a new connection using 0-RTT support is cheap
-   and fast.
 
 
 
-
-Kuehlewind, et al.      Expires December 5, 2017                [Page 8]
+Kuehlewind, et al.      Expires December 8, 2017                [Page 8]
 
 Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
+
+   given that establishing a new connection using 0-RTT support is cheap
+   and fast.
 
    QoS mechanisms in the network MAY also use the connection ID for
    service differentiation as usually a change of connection ID is bind
@@ -461,11 +464,60 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
    connection ID if present) matching is still beneficial for QoS given
    all packets are handled by the same congestion controller.
 
-3.5.  Load balancing
+3.5.  Load Balancing using the Connection ID
 
-   [Editor's note: explain how this works as soon as we have decided who
-   chooses the connection ID and when to set it.  Related to
-   https://github.com/quicwg/base-drafts/issues/349]
+   The Connection ID is used in part to support load balancing in
+   content distribution networks (CDNs), which operate complex,
+   geographically distributed pools of back-end servers, fronted by load
+   balancing systems.  These load balancers are responsible for
+   identifying the most appropriate server for each connection and for
+   routing all packets belonging to that connection to the chosen
+   server.
+
+   Load balancers are often deployed in pools for redundancy and load
+   sharing.  For high availability, it is important that when packets
+   belonging to a flow start to arrive at a different load balancer in
+   the load balancer pool, the packets continue to be forwarded to the
+   original server in the server pool.
+
+   Support for seamless connection migration is an important design goal
+   of QUIC - a necessity due to the proliferation of mobile connected
+   devices.  This connection persistence provides an additional
+   challenge for multi-homed anycast-based services often employed by
+   large content owners and CDNs.  The challenge is that a migration to
+   a different network in the middle of the connection greatly increases
+   the chances of the packets routed to a different anycast point of
+   presence (POP) due to the new network's different connectivity and
+   Internet peering arrangements.  The load balancer in the new POP,
+   potentially thousands of miles away, will not have information about
+   the established flow and would not be able to route it back to the
+   original POP.
+
+   Load balancers may cooperate with servers or server pools behind them
+   to use a server-generated Connection ID value, in order to support
+   stateless load balancing, even across NAT rebinding or other address
+   change events (see Section 2.3).  See section 5.7 of
+   [I-D.ietf-quic-transport].
+
+
+
+Kuehlewind, et al.      Expires December 8, 2017                [Page 9]
+
+Internet-DraftManageability of the QUIC Transport Protocol     June 2017
+
+
+   Server-generated Connection IDs must not encode any information other
+   that that needed to route packets to the appropriate backend
+   server(s): typically the identity of the backend server or pool of
+   servers, if the data-center's load balancing system keeps "local"
+   state of all flows itself.  Care must be exercised to ensure that the
+   information encoded in the Connection ID is not sufficient to
+   identify unique end users.  Note that by encoding routing information
+   in the Connection ID, load balancers open up a new attack vector that
+   allows bad actors to direct traffic at a specific backend server or
+   pool.  It is therefore recommended that Server-Generated Connection
+   ID includes a cryptographic MAC that the load balancer pool server
+   are able to identify and discard packets featuring an invalid MAC.
 
 4.  IANA Considerations
 
@@ -490,7 +542,12 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
    provide confidentiality to its application-layer protocol(s); in
    these cases, alternatives must be found.
 
-6.  Acknowledgments
+6.  Contributors
+
+   Igor Lubashev contributed text to Section 3.5 on the use of the
+   connection ID for load balancing.
+
+7.  Acknowledgments
 
    This work is partially supported by the European Commission under
    Horizon 2020 grant agreement no. 688421 Measurement and Architecture
@@ -500,15 +557,14 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
 
 
-
-Kuehlewind, et al.      Expires December 5, 2017                [Page 9]
+Kuehlewind, et al.      Expires December 8, 2017               [Page 10]
 
 Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
 
-7.  References
+8.  References
 
-7.1.  Normative References
+8.1.  Normative References
 
    [I-D.ietf-quic-tls]
               Thomson, M. and S. Turner, "Using Transport Layer Security
@@ -525,7 +581,7 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
 
-7.2.  Informative References
+8.2.  Informative References
 
    [Ding2015]
               Ding, H. and M. Rabinovich, "TCP Stretch Acknowledgments
@@ -557,7 +613,7 @@ Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
 
 
-Kuehlewind, et al.      Expires December 5, 2017               [Page 10]
+Kuehlewind, et al.      Expires December 8, 2017               [Page 11]
 
 Internet-DraftManageability of the QUIC Transport Protocol     June 2017
 
@@ -613,4 +669,4 @@ Authors' Addresses
 
 
 
-Kuehlewind, et al.      Expires December 5, 2017               [Page 11]
+Kuehlewind, et al.      Expires December 8, 2017               [Page 12]

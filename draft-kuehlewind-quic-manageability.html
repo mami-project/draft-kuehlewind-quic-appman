@@ -291,13 +291,14 @@ address {
 <link href="#rfc.section.3.2" rel="Chapter" title="3.2 Measurement of QUIC Traffic"/>
 <link href="#rfc.section.3.3" rel="Chapter" title="3.3 DDoS Detection and Mitigation"/>
 <link href="#rfc.section.3.4" rel="Chapter" title="3.4 QoS support and ECMP"/>
-<link href="#rfc.section.3.5" rel="Chapter" title="3.5 Load balancing"/>
+<link href="#rfc.section.3.5" rel="Chapter" title="3.5 Load Balancing using the Connection ID"/>
 <link href="#rfc.section.4" rel="Chapter" title="4 IANA Considerations"/>
 <link href="#rfc.section.5" rel="Chapter" title="5 Security Considerations"/>
-<link href="#rfc.section.6" rel="Chapter" title="6 Acknowledgments"/>
-<link href="#rfc.references" rel="Chapter" title="7 References"/>
-<link href="#rfc.references.1" rel="Chapter" title="7.1 Normative References"/>
-<link href="#rfc.references.2" rel="Chapter" title="7.2 Informative References"/>
+<link href="#rfc.section.6" rel="Chapter" title="6 Contributors"/>
+<link href="#rfc.section.7" rel="Chapter" title="7 Acknowledgments"/>
+<link href="#rfc.references" rel="Chapter" title="8 References"/>
+<link href="#rfc.references.1" rel="Chapter" title="8.1 Normative References"/>
+<link href="#rfc.references.2" rel="Chapter" title="8.2 Informative References"/>
 <link href="#rfc.authors" rel="Chapter"/>
 
 
@@ -306,7 +307,7 @@ address {
 
   <meta name="dct.creator" content="Kuehlewind, M., Trammell, B., and D. Druta" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-kuehlewind-quic-manageability-00" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-6-03" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-6-06" />
   <meta name="dct.abstract" content="This document discusses manageability of the QUIC transport protocol, focusing on caveats impacting network operations involving QUIC traffic. Its intended audience is network operators, as well as content providers that rely on the use of QUIC-aware middleboxes, e.g. for load balancing." />
   <meta name="description" content="This document discusses manageability of the QUIC transport protocol, focusing on caveats impacting network operations involving QUIC traffic. Its intended audience is network operators, as well as content providers that rely on the use of QUIC-aware middleboxes, e.g. for load balancing." />
 
@@ -330,7 +331,7 @@ address {
   <td class="right">ETH Zurich</td>
 </tr>
 <tr>
-  <td class="left">Expires: December 5, 2017</td>
+  <td class="left">Expires: December 8, 2017</td>
   <td class="right">D. Druta</td>
 </tr>
 <tr>
@@ -339,7 +340,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">June 03, 2017</td>
+  <td class="right">June 06, 2017</td>
 </tr>
 
     	
@@ -359,7 +360,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on December 5, 2017.</p>
+<p>This Internet-Draft will expire on December 8, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -385,13 +386,14 @@ address {
 <li>3.2.   <a href="#rfc.section.3.2">Measurement of QUIC Traffic</a></li>
 <li>3.3.   <a href="#rfc.section.3.3">DDoS Detection and Mitigation</a></li>
 <li>3.4.   <a href="#rfc.section.3.4">QoS support and ECMP</a></li>
-<li>3.5.   <a href="#rfc.section.3.5">Load balancing</a></li>
+<li>3.5.   <a href="#rfc.section.3.5">Load Balancing using the Connection ID</a></li>
 </ul><li>4.   <a href="#rfc.section.4">IANA Considerations</a></li>
 <li>5.   <a href="#rfc.section.5">Security Considerations</a></li>
-<li>6.   <a href="#rfc.section.6">Acknowledgments</a></li>
-<li>7.   <a href="#rfc.references">References</a></li>
-<ul><li>7.1.   <a href="#rfc.references.1">Normative References</a></li>
-<li>7.2.   <a href="#rfc.references.2">Informative References</a></li>
+<li>6.   <a href="#rfc.section.6">Contributors</a></li>
+<li>7.   <a href="#rfc.section.7">Acknowledgments</a></li>
+<li>8.   <a href="#rfc.references">References</a></li>
+<ul><li>8.1.   <a href="#rfc.references.1">Normative References</a></li>
+<li>8.2.   <a href="#rfc.references.2">Informative References</a></li>
 </ul><li><a href="#rfc.authors">Authors' Addresses</a></li>
 
 
@@ -415,7 +417,7 @@ address {
 
 <ul>
   <li>header type: the long header has a 7-bit header type field following the Header Form bit. The current version of QUIC defines 7 header types, namely Version Negotiation, Client Initial, Server Stateless Retry, Server Cleartext, Client Cleartext, 0-RTT Protected, 1-RTT Protected (key phase 0), 1-RTT Protected (key phase 1), and Public Reset.</li>
-  <li>connection ID: The connection ID is always present on the long and optionally present on the short header indicated by the Connection ID Flag. If present at the short header it at the same position then for the long header. The position and length pf the congestion ID itself as well as the Connection ID flag in the short header is fixed for all versions of QUIC. The connection ID identifies the connection associated with a QUIC packet, for load-balancing and NAT rebinding purposes; see <a href="#rebinding">Section 2.3</a>. Therefore it is also expected that the Connection ID will either be present on all packets of a flow or none of the short header packets. However, this field is under endpoint control and there is protocol mechanism that hinders the sending endpoint to revise its decision about exposing the Connection ID at any time during the connection.</li>
+  <li>connection ID: The connection ID is always present on the long and optionally present on the short header indicated by the Connection ID Flag. If present at the short header it at the same position then for the long header. The position and length pf the congestion ID itself as well as the Connection ID flag in the short header is fixed for all versions of QUIC. The connection ID identifies the connection associated with a QUIC packet, for load-balancing and NAT rebinding purposes; see <a href="#loadbalancing">Section 3.5</a> and <a href="#rebinding">Section 2.3</a>.  Therefore it is also expected that the Connection ID will either be present on all packets of a flow or none of the short header packets. However, this field is under endpoint control and there is protocol mechanism that hinders the sending endpoint to revise its decision about exposing the Connection ID at any time during the connection.</li>
   <li>packet number: Every packet has an associated packet number. The packet number increases with each packet, and the least-significant bits of the packet number are present on each packet. In the short header the length of the exposed packet number field is defined by the (short) header type and can either be 8, 16, or 32 bits. See <a href="#packetnumber">Section 2.4</a>.</li>
   <li>version number: The version number is present on the long headers and identifies the version used for that packet, expect for the Version negotiation packet. The version negotiation packet is fixed for all version of QUIC and contains a lit of versions that is supported by the sender. However the version in the version field of the header is the reflected version of the clients initial packet and is therefore explicitly not supported by the sender.</li>
   <li>key phase: The short header further has a Key Phase flag that is used by the endpoint identify the right key that was used to encrypt the packet. Different key phases are indicated with the use of the long header by using to different header types for protected long header packets.</li>
@@ -423,7 +425,7 @@ address {
 <h1 id="rfc.section.2.2"><a href="#rfc.section.2.2">2.2.</a> <a href="#wire-integrity" id="wire-integrity">Integrity Protection of the Wire Image</a></h1>
 <p id="rfc.section.2.2.p.1">As soon as the cryptographic context is established, all information in the QUIC header, including those exposed in the packet header, is integrity protected. Further, information that were sent and exposed in previous packets when the cryptographic context was established yet, e.g. for the cryptographic initial handshake itself, will be validate later during the cryptographic handshake, such as the version number.  Therefore, devices on path MUST NOT change any information or bits in QUIC packet headers. As alteration of header information would cause packet drop due to a failed integrity check at the receiver, or can even lead to connection termination.</p>
 <h1 id="rfc.section.2.3"><a href="#rfc.section.2.3">2.3.</a> <a href="#rebinding" id="rebinding">Connection ID and Rebinding</a></h1>
-<p id="rfc.section.2.3.p.1">The connection ID in the QUIC packer header is used to allow routing of QUIC packets at load balancers on other than five-tuple information, ensuring that related flows are appropriately balanced together; and to allow rebinding of a connection after one of the endpoint&#8217;s addresses changes - usually the client&#8217;s, in the case of the HTTP binding. The connection ID is proposed by the server during connection establishment, and a server might provide additional connection IDs that can the used by the client at any time during the connection.  Therefore if a flow changes one of its IP addresses it may keep the same connection ID, or the connection ID may also change together with the IP address migration, avoiding linkability; see section 7.6 of <a href="#I-D.ietf-quic-transport">[I-D.ietf-quic-transport]</a>.</p>
+<p id="rfc.section.2.3.p.1">The connection ID in the QUIC packer header is used to allow routing of QUIC packets at load balancers on other than five-tuple information, ensuring that related flows are appropriately balanced together; and to allow rebinding of a connection after one of the endpoint&#8217;s addresses changes - usually the client&#8217;s, in the case of the HTTP binding. The connection ID is proposed by the server during connection establishment, and a server might provide additional connection IDs that can the used by the client at any time during the connection. Therefore if a flow changes one of its IP addresses it may keep the same connection ID, or the connection ID may also change together with the IP address migration, avoiding linkability; see section 7.6 of <a href="#I-D.ietf-quic-transport">[I-D.ietf-quic-transport]</a>.</p>
 <h1 id="rfc.section.2.4"><a href="#rfc.section.2.4">2.4.</a> <a href="#packetnumber" id="packetnumber">Packet Numbers</a></h1>
 <p id="rfc.section.2.4.p.1">The packet number field is always present in the QUIC packet header. The packet number exposes the least significant 32, 16, or 8 bits of an internal packet counter per flow direction that increments with each packet sent. This packet counter is initialized with a random 31-bit initial value at the start of a connection.</p>
 <p id="rfc.section.2.4.p.2">Unlike TCP sequence numbers, this packet number increases with every packet, including those containing only acknowledgment or other control information.  Indeed, whether a packet contains user data or only control information is intentionally left unexposed to the network. The packet number increases with every packet but they sender may skip packet numbers.</p>
@@ -454,18 +456,24 @@ address {
 <p id="rfc.section.3.4.p.1">QUIC does not provide any additional information on requirements on Quality of Service (QoS) provided from the network. QUIC assumes that all packets with the same 5-tuple {dest addr, source addr, protocol, dest port, source port} will receive similar network treatment.  That means all stream that are multiplexed over the same QUIC connection require the same network treatment and are handled by the same congestion controller. If differential network treatment is desired, multiple QUIC connection to the same server might be used, given that establishing a new connection using 0-RTT support is cheap and fast.</p>
 <p id="rfc.section.3.4.p.2">QoS mechanisms in the network MAY also use the connection ID for service differentiation as usually a change of connection ID is bind to a change of address which anyway is likely to lead to a re-route on a different path with different network characteristics.</p>
 <p id="rfc.section.3.4.p.3">Given that QUIC is more tolerant of packet re-ordering than TCP (see <a href="#packetnumber">Section 2.4</a>), Equal-cost multi-path routing (ECMP) does not necessarily need to be flow based.  However, 5-tuple (plus eventually connection ID if present) matching is still beneficial for QoS given all packets are handled by the same congestion controller.</p>
-<h1 id="rfc.section.3.5"><a href="#rfc.section.3.5">3.5.</a> <a href="#load-balancing" id="load-balancing">Load balancing</a></h1>
-<p id="rfc.section.3.5.p.1">[Editor&#8217;s note: explain how this works as soon as we have decided who chooses the connection ID and when to set it. Related to https://github.com/quicwg/base-drafts/issues/349]</p>
+<h1 id="rfc.section.3.5"><a href="#rfc.section.3.5">3.5.</a> <a href="#loadbalancing" id="loadbalancing">Load Balancing using the Connection ID</a></h1>
+<p id="rfc.section.3.5.p.1">The Connection ID is used in part to support load balancing in content distribution networks (CDNs), which operate complex, geographically distributed pools of back-end servers, fronted by load balancing systems.  These load balancers are responsible for identifying the most appropriate server for each connection and for routing all packets belonging to that connection to the chosen server.</p>
+<p id="rfc.section.3.5.p.2">Load balancers are often deployed in pools for redundancy and load sharing. For high availability, it is important that when packets belonging to a flow start to arrive at a different load balancer in the load balancer pool, the packets continue to be forwarded to the original server in the server pool.</p>
+<p id="rfc.section.3.5.p.3">Support for seamless connection migration is an important design goal of QUIC &#8211; a necessity due to the proliferation of mobile connected devices. This connection persistence provides an additional challenge for multi-homed anycast-based services often employed by large content owners and CDNs. The challenge is that a migration to a different network in the middle of the connection greatly increases the chances of the packets routed to a different anycast point of presence (POP) due to the new network&#8217;s different connectivity and Internet peering arrangements. The load balancer in the new POP, potentially thousands of miles away, will not have information about the established flow and would not be able to route it back to the original POP.</p>
+<p id="rfc.section.3.5.p.4">Load balancers may cooperate with servers or server pools behind them to use a server-generated Connection ID value, in order to support stateless load balancing, even across NAT rebinding or other address change events (see <a href="#rebinding">Section 2.3</a>). See section 5.7 of <a href="#I-D.ietf-quic-transport">[I-D.ietf-quic-transport]</a>.</p>
+<p id="rfc.section.3.5.p.5">Server-generated Connection IDs must not encode any information other that that needed to route packets to the appropriate backend server(s): typically the identity of the backend server or pool of servers, if the data-center&#8217;s load balancing system keeps &#8220;local&#8221; state of all flows itself.  Care must be exercised to ensure that the information encoded in the Connection ID is not sufficient to identify unique end users. Note that by encoding routing information in the Connection ID, load balancers open up a new attack vector that allows bad actors to direct traffic at a specific backend server or pool.  It is therefore recommended that Server-Generated Connection ID includes a cryptographic MAC that the load balancer pool server are able to identify and discard packets featuring an invalid MAC.</p>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a></h1>
 <p id="rfc.section.4.p.1">This document has no actions for IANA.</p>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a></h1>
 <p id="rfc.section.5.p.1">Supporting manageability of QUIC traffic inherently involves tradeoffs with the confidentiality of QUIC&#8217;s control information; this entire document is therefore security-relevant.</p>
 <p id="rfc.section.5.p.2">Some of the properties of the QUIC header used in network management are irrelevant to application-layer protocol operation and/or user privacy. For example, packet number exposure (and echo, as proposed in this document), as well as connection establishment exposure for 1-RTT establishment, make no additional information about user traffic available to devices on path.</p>
 <p id="rfc.section.5.p.3">At the other extreme, supporting current traffic classification methods that operate through the deep packet inspection (DPI) of application-layer headers are directly antithetical to QUIC&#8217;s goal to provide confidentiality to its application-layer protocol(s); in these cases, alternatives must be found.</p>
-<h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#acknowledgments" id="acknowledgments">Acknowledgments</a></h1>
-<p id="rfc.section.6.p.1">This work is partially supported by the European Commission under Horizon 2020 grant agreement no. 688421 Measurement and Architecture for a Middleboxed Internet (MAMI), and by the Swiss State Secretariat for Education, Research, and Innovation under contract no. 15.0268. This support does not imply endorsement.</p>
-<h1 id="rfc.references"><a href="#rfc.references">7.</a> References</h1>
-<h1 id="rfc.references.1"><a href="#rfc.references.1">7.1.</a> Normative References</h1>
+<h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#contributors" id="contributors">Contributors</a></h1>
+<p id="rfc.section.6.p.1">Igor Lubashev contributed text to <a href="#loadbalancing">Section 3.5</a> on the use of the connection ID for load balancing.</p>
+<h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#acknowledgments" id="acknowledgments">Acknowledgments</a></h1>
+<p id="rfc.section.7.p.1">This work is partially supported by the European Commission under Horizon 2020 grant agreement no. 688421 Measurement and Architecture for a Middleboxed Internet (MAMI), and by the Swiss State Secretariat for Education, Research, and Innovation under contract no. 15.0268. This support does not imply endorsement.</p>
+<h1 id="rfc.references"><a href="#rfc.references">8.</a> References</h1>
+<h1 id="rfc.references.1"><a href="#rfc.references.1">8.1.</a> Normative References</h1>
 <table>
   <tbody>
     <tr>
@@ -488,7 +496,7 @@ address {
     </tr>
   </tbody>
 </table>
-<h1 id="rfc.references.2"><a href="#rfc.references.2">7.2.</a> Informative References</h1>
+<h1 id="rfc.references.2"><a href="#rfc.references.2">8.2.</a> Informative References</h1>
 <table>
   <tbody>
     <tr>
